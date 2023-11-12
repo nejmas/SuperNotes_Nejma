@@ -1,0 +1,39 @@
+=== SuperNote
+
+== Introduction
+
+Le projet SuperNote vise à créer un plugin de gestion de notes polyvalent, initialement conçu pour fonctionner en ligne de commande (cmd). L'objectif est de permettre aux utilisateurs d'ajouter, de visualiser et de gérer leurs notes de manière efficace et rapide, en mettant l'accent sur l'intégration avec différentes plates-formes de prise de notes et les environnements de développement.
+
+== Objectifs du Projet
+
+Le projet SuperNote a pour objectif de fournir une solution complète pour la prise de notes, en se concentrant sur les aspects suivants :
+* Compatibilité multiplateforme avec des plates-formes de prise de notes populaires.
+* Intégration avec les environnements de développement (IDE).
+* Fonctionnalités avancées telles que l'intégration de formules mathématiques et une fonctionnalité de dessin.
+* Interface en ligne de commande (cmd) pour une interaction rapide.
+
+== Fonctionnalités Principales
+
+Le plugin SuperNote offrira les fonctionnalités suivantes :
+* Ajout de notes en ligne de commande.
+* Affichage des notes en ligne de commande.
+* Gestion de base des notes (suppression, modification, etc.).
+* Intégration avec des plates-formes de prise de notes telles que Evernote, OneNote, Notion.
+* Intégration avec des IDE tels que Visual Studio Code.
+
+
+== Public Cible
+
+SuperNote cible les utilisateurs suivants :
+* Étudiants et professionnels ayant besoin de gérer leurs notes de manière efficace.
+* Développeurs cherchant à intégrer la gestion de notes dans leur flux de travail de développement.
+
+== Langage de Programmation
+Le plugin sera développé en Java.
+
+== Livrables
+
+* Code source du plugin SuperNote.
+* Documentation utilisateur.
+
+== UML
