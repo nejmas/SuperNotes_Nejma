@@ -2,6 +2,7 @@
 
 [![Tag](https://img.shields.io/badge/Tag-v0.1-blue)](https://github.com/dounyaa/SuperNotes/releases/tag/v0.1)
 [![license: Apache 2.0](https://img.shields.io/badge/license-Apache_2.0-green)](LICENSE)
+![workflow](https://github.com/dounyaa/SuperNotes/actions/workflows/gradle.yml/badge.svg)
 
 ## Description
 
