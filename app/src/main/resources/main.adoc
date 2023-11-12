@@ -1,4 +1,4 @@
-=== SuperNote
+== SuperNote
 
 == Introduction
 
@@ -37,3 +37,4 @@ Le plugin sera développé en Java.
 * Documentation utilisateur.
 
 == UML
+https://github.com/dounyaa/SuperNotes/blob/init_project/app/src/main/resources/models/model.puml
