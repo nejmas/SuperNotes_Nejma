@@ -8,6 +8,11 @@
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = "0.8.9"
 }
 
 repositories {
