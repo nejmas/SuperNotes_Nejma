@@ -1,0 +1,46 @@
+@startuml model
+
+class Folder {
+  - notes: List<Note>
+
+  + createNote()
+  + exportNote(noteId: integer)
+  + deleteNode(noteId: integer)
+}
+
+class Note {
+  - noteId: integer
+  - text: String
+  - ScientificFormulas: List<ScientificFormula>
+  - Illustrations: List<Illustration>
+
+  + render()
+  + addScientificFormula(formula: ScientificFormula)
+  + addIllustration(illustration: Illustration)
+}
+
+class ScientificFormula {
+  + generateSymbols()
+}
+
+class FunctionScientificFormula extends ScientificFormula {
+   + drawMathGraph()
+}
+
+class Illustration {
+  + draw()
+}
+
+class User {
+    - login
+    - password
+    - firstname
+    - lastName
+}
+
+Folder -- Note : consists of
+Note -- ScientificFormula : includes
+Note -- Illustration : includes
+Folder -- User : used by
+
+@enduml
