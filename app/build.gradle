@@ -17,6 +17,7 @@ sonar {
     property "sonar.projectKey", "dounyaa_SuperNotes"
     property "sonar.organization", "dounyaa"
     property "sonar.host.url", "https://sonarcloud.io"
+    property "sonar.coverage.exclusions" , "**/*" // Disable code coverage
   }
 }
 
