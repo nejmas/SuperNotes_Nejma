@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="supernotes.AppTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-11-12T11:39:46" hostname="MACs-MBP" time="0.008">
+  <properties/>
+  <testcase name="appHasAGreeting" classname="supernotes.AppTest" time="0.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
