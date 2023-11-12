@@ -33,7 +33,7 @@ SuperNote est un plugin polyvalent de gestion de notes conçu pour offrir une ex
 2. **Compilation :**
 
    ```bash
-   cd SuperNote
+   cd SuperNotes
    ./gradlew build
    ```
 
