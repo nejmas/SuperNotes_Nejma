@@ -25,6 +25,12 @@ jacoco {
     toolVersion = "0.8.9"
 }
 
+jacocoTestReport {
+    reports {
+        csv.enabled true
+    }
+}
+
 repositories {
     // Use Maven Central for resolving dependencies.
     mavenCentral()
