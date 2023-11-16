@@ -3,12 +3,66 @@
  */
 package supernotes;
 
+import java.util.Scanner;
+
+import supernotes.notes.NoteManager;
+
 public class App {
-    public String getGreeting() {
-        return "Hello World!";
-    }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        Scanner scanner = new Scanner(System.in);
+        String userInput;
+
+        System.out.println("Bienvenue dans votre application SuperNotes.");
+
+        while (true) {
+            System.out.print("> ");
+            userInput = scanner.nextLine().trim();
+
+            if (userInput.equalsIgnoreCase("exit")) {
+                System.out.println("Fermeture de l'application.");
+                break;
+            } else if (userInput.startsWith("sc ")) {
+                String[] commandParts = userInput.split(" ", 3);
+
+                if (commandParts.length >= 3) {
+                    String action = commandParts[1];
+                    String argument = commandParts[2];
+
+                    // Manage CMD
+                    switch (action) {
+                        case "add":
+                            if (argument.startsWith("note ")) {
+                                String[] noteParts = argument.substring(5).split(" ", 2);
+                                if (noteParts.length >= 2) {
+                                    String noteTitle = noteParts[0];
+                                    String noteDescription = noteParts[1];
+                                    NoteManager.addNote(noteTitle, noteDescription);
+                                    System.out.println("Note ajoutée : " + noteTitle + " - " + noteDescription);
+                                } else {
+                                    System.out.println("Format invalide pour ajouter une note.");
+                                }
+                            } else {
+                                System.out.println("Commande inconnue.");
+                            }
+                            break;
+                        // Ajoutez d'autres cas pour d'autres actions si nécessaire
+                        default:
+                            System.out.println("Commande inconnue.");
+                            break;
+                    }
+                } else {
+                    System.out.println("Format de commande incorrect.");
+                }
+            } else {
+                System.out.println("Commande inconnue.");
+            }
+        }
+
+        scanner.close();
     }
+
 }
+
+
+

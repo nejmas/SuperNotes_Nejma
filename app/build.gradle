@@ -27,7 +27,7 @@ jacoco {
 
 jacocoTestReport {
     reports {
-        csv.enabled true
+        //csv.enabled true
     }
 }
 
@@ -54,4 +54,19 @@ java {
 application {
     // Define the main class for the application.
     mainClass = 'supernotes.App'
+}
+
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'supernotes.App'
+    }
+}
+
+task executableJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'supernotes.App'
+    }
+    from sourceSets.main.output
+    archiveClassifier = 'executable'
 }
