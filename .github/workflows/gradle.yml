@@ -55,7 +55,8 @@ jobs:
       run: ./gradlew build sonar --info
     - name: Install Asciidoctor and Asciidoctor PDF
       run: |
-        gem install asciidoctor asciidoctor-pdf --no-document
+        gem install asciidoctor-pdf -v '1.5.3'
+        gem install rouge -v '3.15.0'
 
     - name: Generate PDF from AsciiDoc
       run: |
