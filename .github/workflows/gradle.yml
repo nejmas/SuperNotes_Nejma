@@ -54,14 +54,9 @@ jobs:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: ./gradlew build sonar --info
       
-    - name: Install Ruby and Asciidoctor dependencies
-      uses: actions/setup-ruby@v1
-      with:
-        ruby-version: 3.0
     - name: Install Asciidoctor and Asciidoctor PDF
       run: |
-        gem install asciidoctor-pdf -v '1.5.3'
-        gem install rouge -v '3.15.0'
+        gem install asciidoctor asciidoctor-pdf --no-document
 
     - name: Generate PDF from AsciiDoc
       run: |
@@ -72,7 +67,7 @@ jobs:
       with:
         upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./output.pdf
-        asset_name: main.pdf
+        asset_name: doc.pdf
         asset_content_type: application/pdf
         token: ${{ secrets.GITHUB_TOKEN }}
-    
+
