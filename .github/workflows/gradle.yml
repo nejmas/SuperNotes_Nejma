@@ -56,7 +56,7 @@ jobs:
       
     - name: Install Asciidoctor
       run: |
-        gem install asciidoctor-pdf --pre
+        sudo gem install asciidoctor-pdf --pre
 
     - name: Generate PDF from AsciiDoc
       run: |
