@@ -1,0 +1,103 @@
+@startuml
+interface Note {
+    +getContent(): String
+    +setContent(content: String): void
+}
+
+class TextNote {
+    -content: String
+    -tag: String
+    +getContent(): String
+    +setContent(content: String): void
+    +getTag(): String
+    +setTag(tag: String): void
+}
+
+class ImageNote {
+    -content: byte[]
+    -tag: String
+    +getContent(): byte[]
+    +setContent(content: byte[]): void
+    +getTag(): String
+    +setTag(tag: String): void
+}
+
+interface NoteFactory {
+    +createNote(): Note
+}
+
+class TextNoteFactory {
+    +createNote(): Note
+}
+
+class ImageNoteFactory {
+    +createNote(): Note
+}
+
+interface INoteManager {
+    +addNote(Note: note): void
+    +deleteByTag(Strin: tag): void
+}
+
+class NoteManager implements INoteManager {
+    +addNote(Note: note): void
+    +deleteByTag(Strin: tag): void
+}
+
+
+interface FileHandler {
+    +exportPdfFile(String: filePath): void 
+    +exportPdfFileUsingFilter(String: filePath, String: filter): void
+
+}
+
+class FileManager implements FileHandler {
+    +exportPdfFile(String: filePath): void 
+    +exportPdfFileUsingFilter(String: filePath, String: filter): void
+    +exportPdf(String: filePath, List<Note>: result): void
+
+}
+
+
+class CommandLineInterface {
+    +parseCommand(command: String): void
+}
+
+interface DBManager{
+    +createNotesTable(): void
+    +ddTextNote(String: content, String: tag): void
+    +addImageNote(byte[]: imageBytes, String: tag): void
+    +deleteNoteByTag(String: tag): void
+    +getAllNotes(): ArrayList<Note> 
+    +getAllNotesByTag(String: tag): ArrayList<Note> 
+    +getAllNotesLike(String: contentMotif): ArrayList<Note> 
+}
+
+class SQLiteDBManager implements DBManager {
+    +createNotesTable(): void
+    +ddTextNote(String: content, String: tag): void
+    +addImageNote(byte[]: imageBytes, String: tag): void
+    +deleteNoteByTag(String: tag): void
+    +getAllNotes(): ArrayList<Note>
+    +getAllNotesByTag(String: tag): ArrayList<Note>
+    +getAllNotesLike(String: contentMotif): ArrayList<Note>
+    +connect(): void
+    +getConnection(): void
+    }
+
+Note <|.. TextNote
+Note <|.. ImageNote
+
+NoteFactory <|.. TextNoteFactory
+NoteFactory <|.. ImageNoteFactory
+FileManager ..> DBManager
+NoteManager ..> DBManager
+
+NoteFactory ..> Note : creates
+NoteManager ..> Note : manages
+FileHandler ..> Note : handles
+
+
+CommandLineInterface ..> NoteManager : sendsCommands
+
+@enduml
