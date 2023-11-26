@@ -7,7 +7,10 @@
 
 name: Java CI with Gradle
 
-on: [push]
+on:
+  push:
+    branches:
+      - main 
 
 permissions:
   contents: read
@@ -50,4 +53,20 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: ./gradlew build sonar --info
+    - name: Install Asciidoctor and Asciidoctor PDF
+      run: |
+        gem install asciidoctor asciidoctor-pdf --no-document
+
+    - name: Generate PDF from AsciiDoc
+      run: |
+        asciidoctor-pdf main.adoc -o output.pdf
+
+    - name: Upload PDF to GitHub Releases
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: ./output.pdf
+        asset_name: main.pdf
+        asset_content_type: application/pdf
+        token: ${{ secrets.GITHUB_TOKEN }}
     
