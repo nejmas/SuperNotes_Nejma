@@ -101,6 +101,7 @@ Pour utiliser SuperNote, voici quelques commandes courantes que vous pouvez exé
     ```
 
 
+Pour plus d'informations sur l'utilisation de SuperNotes, regardez le README.
 
 == Diagramme de classe 
 
@@ -168,6 +169,7 @@ class FileManager implements FileHandler {
 
 class CommandLineInterface {
     +parseCommand(command: String): void
+    +displayHelp(): void
 }
 
 interface DBManager{
@@ -192,6 +194,30 @@ class SQLiteDBManager implements DBManager {
     +getConnection(): void
     }
 
+interface NotionApiManager{
+    +createNotionPage(String: parentPageId, String: propertiesJson): String
+    +retrievePageContent(String: pageId): String
+    +updatePageProperties(String: pageId, String: propertiesJson): String
+    }
+
+class NotionAPI implements NotionApiManager{
+    +createNotionPage(String: parentPageId, String: propertiesJson): String
+    +retrievePageContent(String: pageId): String
+    +updatePageProperties(String: pageId, String: propertiesJson): String
+    }
+
+interface NotionManager{
+    +extractNewPageId(String newPage): String
+    +extractNewPageId(String newPage): String
+    +extractPageTitle(String newPage): String
+}
+
+class NotionPageManager implements NotionManager{
+    +extractNewPageId(String newPage): String
+    +extractNewPageId(String newPage): String
+    +extractPageTitle(String newPage): String
+    }  
+
 Note <|.. TextNote
 Note <|.. ImageNote
 
@@ -203,10 +229,11 @@ NoteManager ..> DBManager
 NoteFactory ..> Note : creates
 NoteManager ..> Note : manages
 FileHandler ..> Note : handles
+NotionAPI ..> Note : manage
+NotionPageManager ..> NotionAPI
 
 
 CommandLineInterface ..> NoteManager : sendsCommands
-
-@enduml
+CommandLineInterface ..> NotionApiManager : sendsCommands
 
 ----
