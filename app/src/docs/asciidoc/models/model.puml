@@ -44,46 +44,77 @@ class NoteManager implements INoteManager {
     +deleteByTag(Strin: tag): void
 }
 
-
 interface FileHandler {
     +exportPdfFile(String: filePath): void 
     +exportPdfFileUsingFilter(String: filePath, String: filter): void
-
 }
 
 class FileManager implements FileHandler {
     +exportPdfFile(String: filePath): void 
     +exportPdfFileUsingFilter(String: filePath, String: filter): void
     +exportPdf(String: filePath, List<Note>: result): void
-
 }
 
+class DriveQuickstart {
+  -APPLICATION_NAME: String
+  -JSON_FACTORY: JsonFactory
+  -TOKENS_DIRECTORY_PATH: String
+  -SCOPES: List<String>
+  -CREDENTIALS_FILE_PATH: String
+  +getCredentials(HTTP_TRANSPORT: NetHttpTransport): Credential
+  +uploadFile(filePath1: String, result: List<Note>): boolean
+}
 
 class CommandLineInterface {
     +parseCommand(command: String): void
+    +displayHelp(): void
 }
 
-interface DBManager{
+interface DBManager {
     +createNotesTable(): void
-    +ddTextNote(String: content, String: tag): void
-    +addImageNote(byte[]: imageBytes, String: tag): void
-    +deleteNoteByTag(String: tag): void
+    +addTextNote(content: String, tag: String): void
+    +addImageNote(imageBytes: byte[], tag: String): void
+    +deleteNoteByTag(tag: String): void
     +getAllNotes(): ArrayList<Note> 
-    +getAllNotesByTag(String: tag): ArrayList<Note> 
-    +getAllNotesLike(String: contentMotif): ArrayList<Note> 
+    +getAllNotesByTag(tag: String): ArrayList<Note> 
+    +getAllNotesLike(contentMotif: String): ArrayList<Note> 
 }
 
 class SQLiteDBManager implements DBManager {
     +createNotesTable(): void
-    +ddTextNote(String: content, String: tag): void
-    +addImageNote(byte[]: imageBytes, String: tag): void
-    +deleteNoteByTag(String: tag): void
+    +addTextNote(content: String, tag: String): void
+    +addImageNote(imageBytes: byte[], tag: String): void
+    +deleteNoteByTag(tag: String): void
     +getAllNotes(): ArrayList<Note>
-    +getAllNotesByTag(String: tag): ArrayList<Note>
-    +getAllNotesLike(String: contentMotif): ArrayList<Note>
+    +getAllNotesByTag(tag: String): ArrayList<Note>
+    +getAllNotesLike(contentMotif: String): ArrayList<Note>
     +connect(): void
     +getConnection(): void
+}
+
+interface NotionApiManager{
+    +createNotionPage(String: parentPageId, String: propertiesJson): String
+    +retrievePageContent(String: pageId): String
+    +updatePageProperties(String: pageId, String: propertiesJson): String
     }
+
+class NotionAPI implements NotionApiManager{
+    +createNotionPage(String: parentPageId, String: propertiesJson): String
+    +retrievePageContent(String: pageId): String
+    +updatePageProperties(String: pageId, String: propertiesJson): String
+    }
+
+interface NotionManager{
+    +extractNewPageId(String newPage): String
+    +extractNewPageId(String newPage): String
+    +extractPageTitle(String newPage): String
+}
+
+class NotionPageManager implements NotionManager{
+    +extractNewPageId(String newPage): String
+    +extractNewPageId(String newPage): String
+    +extractPageTitle(String newPage): String
+    }  
 
 Note <|.. TextNote
 Note <|.. ImageNote
@@ -96,8 +127,14 @@ NoteManager ..> DBManager
 NoteFactory ..> Note : creates
 NoteManager ..> Note : manages
 FileHandler ..> Note : handles
-
+NotionAPI ..> Note : manage
+NotionPageManager ..> NotionAPI
 
 CommandLineInterface ..> NoteManager : sendsCommands
+CommandLineInterface ..> NotionApiManager : sendsCommands
+
+FileManager ..> DriveQuickstart: uses
 
 @enduml
+=======
+

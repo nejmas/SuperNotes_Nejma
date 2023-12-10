@@ -21,31 +21,38 @@ public class SQLiteDBManager implements DBManager {
     }
 
     @Override
-    public void createNotesTable()
-    {
+    public void createNotesTable() {
         String sql = "CREATE TABLE IF NOT EXISTS notes (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "title TEXT," +
                 "type TEXT NOT NULL," + // Champ pour indiquer le type de note (texte ou image)
                 "content TEXT," + // Champs pour stocker le contenu texte
                 "image BLOB," + // Champs pour stocker l'image en tant que BLOB
-                "tag TEXT" + // Champs pour stocker le tag texte
+                "tag TEXT," + // Champs pour stocker le tag texte (ajout de la virgule ici)
+                "parent_page_id TEXT," +
+                "page_id TEXT" + // Champs pour stocker l'ID de la page
                 ")";
+    
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    
 
     @Override
-    public void addTextNote(String content, String tag)
+    public void addTextNote(String title, String content, String tag, String parent_page_id, String page_id)
     {
-        String sql = "INSERT INTO notes (type, content, tag) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id) VALUES (?, ?, ?, ?, ?, ?)";
         try (var conn = this.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, "text");
-            pstmt.setString(2, content);            
-            pstmt.setString(3, tag);
+            pstmt.setString(1, title);
+            pstmt.setString(2, "text");
+            pstmt.setString(3, content);            
+            pstmt.setString(4, tag);
+            pstmt.setString(5, parent_page_id);
+            pstmt.setString(6, page_id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -53,14 +60,17 @@ public class SQLiteDBManager implements DBManager {
     }
 
     @Override
-    public void addImageNote(byte[] imageBytes, String tag)
+    public void addImageNote(String title, byte[] imageBytes, String tag, String parent_page_id, String page_id)
     {
-        String sql = "INSERT INTO notes (type, image, tag) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id) VALUES (?, ?, ?, ?, ?, ?)";
         try (var conn = this.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql);) {
-            pstmt.setString(1, "image");
-            pstmt.setBytes(2, imageBytes);
-            pstmt.setString(3, tag);
+            pstmt.setString(1, title);
+            pstmt.setString(2, "image");
+            pstmt.setBytes(3, imageBytes);
+            pstmt.setString(4, tag);
+            pstmt.setString(5, parent_page_id);
+            pstmt.setString(6, page_id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,13 +106,19 @@ public class SQLiteDBManager implements DBManager {
                 var type = rs.getString("type");
                 if (type.equals("text")){
                     result.add(new TextNote(
+                            rs.getString("title"),
                             rs.getString("content"),
-                            rs.getString("tag")));
+                            rs.getString("tag"),
+                            rs.getString("parent_page_id"),
+                            rs.getString("page_id")));
                 }
                 else if (type.equals("image")){
                     result.add(new ImageNote(
+                            rs.getString("title"),
                             rs.getBytes("image"),
-                            rs.getString("tag")));
+                            rs.getString("tag"),
+                            rs.getString("parent_page_id"),
+                            rs.getString("page_id")));
                 }
             }
         } catch (SQLException e) {
@@ -130,13 +146,19 @@ public class SQLiteDBManager implements DBManager {
                     var type = rs.getString("type");
                     if (type.equals("text")){
                         result.add(new TextNote(
-                                rs.getString("content"),
-                                rs.getString("tag")));
+                            rs.getString("title"),
+                            rs.getString("content"),
+                            rs.getString("tag"),
+                            rs.getString("parent_page_id"),
+                            rs.getString("page_id")));
                     }
                     else if (type.equals("image")){
                         result.add(new ImageNote(
+                                rs.getString("title"),
                                 rs.getBytes("image"),
-                                rs.getString("tag")));
+                                rs.getString("tag"),
+                                rs.getString("parent_page_id"),
+                                rs.getString("page_id")));
                     }
                 }
             }
@@ -166,13 +188,19 @@ public class SQLiteDBManager implements DBManager {
                     var type = rs.getString("type");
                     if (type.equals("text")){
                         result.add(new TextNote(
-                                rs.getString("content"),
-                                rs.getString("tag")));
+                            rs.getString("title"),
+                            rs.getString("content"),
+                            rs.getString("tag"),
+                            rs.getString("parent_page_id"),
+                            rs.getString("page_id")));
                     }
                     else if (type.equals("image")){
                         result.add(new ImageNote(
+                                rs.getString("title"),
                                 rs.getBytes("image"),
-                                rs.getString("tag")));
+                                rs.getString("tag"),
+                                rs.getString("parent_page_id"),
+                                rs.getString("page_id")));
                     }
                 }
             }
@@ -183,6 +211,74 @@ public class SQLiteDBManager implements DBManager {
 
         return result;
     }
+
+    @Override
+    public String getParentPageId() {
+        String parentPageId = null;
+        String sql = "SELECT parent_page_id FROM notes WHERE parent_page_id IS NOT NULL LIMIT 1";
+    
+        try (var conn = this.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            if (rs.next()) {
+                parentPageId = rs.getString("parent_page_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return parentPageId;
+    }
+
+    @Override
+    public String getPageId(String content) {
+        String sql = "SELECT page_id FROM notes WHERE content = ?";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, content);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getString("page_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        return null; 
+    }
+
+    public void updateNoteContentInDB(String pageId, String newContent) {
+        String sql = "UPDATE notes SET content = ? WHERE page_id = ?";
+        try(Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)){
+            pstmt.setString(1, newContent);
+            pstmt.setString(2, pageId);
+            pstmt.executeUpdate();
+            System.out.println("Contenu de la note mis à jour !");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean doesNoteExist(String pageId) {
+        try (Connection connection = getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) FROM notes WHERE page_id = ?")) {
+            
+            preparedStatement.setString(1, pageId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt(1);
+                return count > 0; // Si le compte est supérieur à zéro, la note existe
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
+
 
     private void connect()
     {

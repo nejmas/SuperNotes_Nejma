@@ -88,8 +88,18 @@ public class FileManager implements FileHandler {
             pdf.close();
 
             System.out.println("Exportation terminée : " + filePath);
+
+            boolean isUploaded = DriveQuickstart.uploadFile(filePath, result);
+
+            if(isUploaded){
+                System.out.println("Fichier téléchargé sur Google Drive");
+            }
+            else{
+                System.out.println("Erreur réseau");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
+
