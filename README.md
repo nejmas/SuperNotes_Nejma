@@ -90,14 +90,16 @@ La version v0.2 de SuperNote propose les fonctionnalités suivantes :
 
 - **AEnregistrer les Notes dans une Base de Données SQLite :**  Stocke toutes les notes et leurs tags associés dans une base de données SQLite.
 
-- **Supprimer les notes par Tag :** Permet de supprimer toutes les notes associées à un tag spécifique.
-spécifié et l'associe à un tag.
+- **Supprimer les notes par Tag :** Permet de supprimer toutes les notes associées à un tag spécifique. Spécifié et l'associe à un tag.
+
   ```bash
   sn delete --tag "mon_tag_a_supprimer"
 
 ### Générer un Rapport de Notes
+
 - **Générer un Rapport de Toutes les Notes :** Crée un rapport sous format PDF contenant toutes les notes existantes.
-spécifié et l'associe à un tag.
+- spécifié et l'associe à un tag.
+
   ```bash
   sn export --all "chemin/vers/fichier.pdf"
 
@@ -121,8 +123,8 @@ Cette version offre la possibilité de créer, gérer, filtrer et générer des 
 
 La version v0.3 de SuperNote propose les fonctionnalités suivantes :
 
-##Intégration de l'API de Notion
-####Prérequis
+## Intégration de l'API de Notion
+#### Prérequis
 - **Clé API Notion :** Pour bénéficier des fonctionnalités intégrées de Notion, une clé API Notion est nécessaire. Vous pouvez obtenir votre clé API depuis votre compte Notion afin d'accéder à ces fonctionnalités. Pour créer votre clé API :
 
 - Accédez à cette page : https://www.notion.so/my-integrations.
@@ -191,12 +193,13 @@ Ces étapes garantissent la liaison efficace entre SuperNotes et votre espace No
   ```bash
   sn add "chemin/vers/image.png"
 
-- **Générer un Rapport de Toutes les Notes :** Crée un rapport sous format PDF contenant toutes les notes existantes.
-spécifié et l'associe à un tag.
+- **Générer un Rapport de Toutes les Notes :** Crée un rapport sous format PDF contenant toutes les notes existantes.Spécifié et l'associe à un tag.
+
   ```bash
   sn export --all "chemin/vers/fichier.pdf"
 
 - **Filtrer par Tag pour Générer le Rapport :** Génère un rapport PDF basé sur les notes associées à un tag spécifique.
+
   ```bash
   sn export --tag "mon_tag" "chemin/vers/fichier.pdf"
 
@@ -212,7 +215,8 @@ Fichier téléchargé sur Google Drive
 notes exporter avec succès !
 
 ```
--** Il faut cliquer sur ce lien pour autoriser la synchronisation avec le compte Google de l'utilisateur. Une fois l'autorisation accordée, les fichiers exportés à l'aide de la commande `sn export --tag "mon_tag" "chemin/vers/fichier.pdf"`, par exemple, seront automatiquement disponibles dans son espace Google Drive.
+
+- Il faut cliquer sur ce lien pour autoriser la synchronisation avec le compte Google de l'utilisateur. Une fois l'autorisation accordée, les fichiers exportés à l'aide de la commande `sn export --tag "mon_tag" "chemin/vers/fichier.pdf"`, par exemple, seront automatiquement disponibles dans son espace Google Drive.
 
 
 ### Commande Help
