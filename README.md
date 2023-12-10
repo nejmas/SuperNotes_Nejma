@@ -162,9 +162,9 @@ Ces étapes garantissent la liaison efficace entre SuperNotes et votre espace No
 
 - **AEnregistrer les Notes dans une Base de Données SQLite :**  Stocke toutes les notes créer sur notion avec un id_page et parent_id_page.
 
-## Synchroniser les notes avec Google Drive
+### Synchroniser les notes avec Google Drive
 
-#### Prérequis
+### Prérequis
 
 - **SuperNote est actuellement conçu pour une utilisation locale et n'est pas destiné à être accessible au grand public. Pour utiliser la synchronisation avec Google Drive dans cet environnement restreint, il faut suivre les étapes suivantes :
 
