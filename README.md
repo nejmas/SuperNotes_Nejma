@@ -168,15 +168,15 @@ Ces étapes garantissent la liaison efficace entre SuperNotes et votre espace No
 
 ### Prérequis
 
-- **SuperNote est actuellement conçu pour une utilisation locale et n'est pas destiné à être accessible au grand public. Pour utiliser la synchronisation avec Google Drive dans cet environnement restreint, il faut suivre les étapes suivantes :
+- SuperNote est actuellement conçu pour une utilisation locale et n'est pas destiné à être accessible au grand public. Pour utiliser la synchronisation avec Google Drive dans cet environnement restreint, il faut suivre les étapes suivantes :
 
-- Créer un compte Google : Chaque utilisateur doit posséder un compte Google valide pour synchroniser ses notes avec Google Drive.
+  * Créer un compte Google : Chaque utilisateur doit posséder un compte Google valide pour synchroniser ses notes avec Google Drive.
 
-- Configurer l'API Google Drive : Pour activer la synchronisation, l'administrateur de l'application devra ajouter les comptes Google Drive des utilisateurs à la liste des utilisateurs autorisés au niveau de Google Cloud Platforme .
+  * Configurer l'API Google Drive : Pour activer la synchronisation, l'administrateur de l'application devra ajouter les comptes Google Drive des utilisateurs à la liste des utilisateurs autorisés au niveau de Google Cloud Platforme .
 
-- Accès aux comptes Google dans SuperNote : Une fois que les utilisateurs ont ajouté leurs comptes Google autorisés .
+  * Accès aux comptes Google dans SuperNote : Une fois que les utilisateurs ont ajouté leurs comptes Google autorisés .
 
-- Tests dans un environnement local : Lorsqu'un utilisateur teste l'application pour la première fois et recherche le fichier exporté dans son compte Google Cloud, il recevra un lien au niveau de termial qui va lui permettre de connecter son compte Google pour cette première utilisation. Par la suite, une fois que le compte est synchronisé, l'utilisateur n'aura plus besoin de réaliser cette action.
+  * Tests dans un environnement local : Lorsqu'un utilisateur teste l'application pour la première fois et recherche le fichier exporté dans son compte Google Cloud, il recevra un lien au niveau de termial qui va lui permettre de connecter son compte Google pour cette première utilisation. Par la suite, une fois que le compte est synchronisé, l'utilisateur n'aura plus besoin de réaliser cette action.
 
 
 #### Utilisation
