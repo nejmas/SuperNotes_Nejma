@@ -116,7 +116,7 @@ La version v0.2 de SuperNote propose les fonctionnalités suivantes :
     exit
     ```
 
-Cette version offre la possibilité de créer, gérer, filtrer et générer des rapports pour vos notes, en utilisant des tags et des mots-clés pour une organisation avancée et une gestion efficace.
+- Cette version offre la possibilité de créer, gérer, filtrer et générer des rapports pour vos notes, en utilisant des tags et des mots-clés pour une organisation avancée et une gestion efficace.
 ---
 
 ## Version v0.3
