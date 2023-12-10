@@ -12,6 +12,7 @@ plugins {
     id "org.sonarqube" version "4.4.1.3373"
 }
 
+
 sonar {
   properties {
     property "sonar.projectKey", "dounyaa_SuperNotes"
@@ -47,6 +48,9 @@ dependencies {
     implementation 'org.slf4j:slf4j-nop:2.0.0-alpha1'
     implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.24'
     implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation group: 'org.json', name: 'json', version: '20210307'
 
 
 }
