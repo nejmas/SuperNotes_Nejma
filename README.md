@@ -20,7 +20,7 @@ SuperNote est un plugin polyvalent de gestion de notes conçu pour offrir une ex
 
 ---
 
-## Utilisation
+## Installation
 
 1. **Clonage du Projet :**
 
@@ -67,9 +67,9 @@ Une fois l'application lancée, voici quelques exemples de commandes pour intera
     ```
 
 ---
-## Version v0.1
+## Version v0.2
 
-La version v0.1 de SuperNote propose les fonctionnalités suivantes :
+La version v0.2 de SuperNote propose les fonctionnalités suivantes :
 
 ### Création et Géstion des Notes
 - **Créer une Note de type texte:** Permet de créer une nouvelle note avec un contenu spécifié et l'associe à un tag.
@@ -117,9 +117,59 @@ spécifié et l'associe à un tag.
 Cette version offre la possibilité de créer, gérer, filtrer et générer des rapports pour vos notes, en utilisant des tags et des mots-clés pour une organisation avancée et une gestion efficace.
 ---
 
+## Version v0.3
+
+La version v0.3 de SuperNote propose les fonctionnalités suivantes :
+
+###Prérequis
+- **Clé API Notion :** Pour bénéficier des fonctionnalités intégrées de Notion, une clé API Notion est nécessaire. Vous pouvez obtenir votre clé API depuis votre compte Notion afin d'accéder à ces fonctionnalités. Pour créer votre clé API :
+
+- Accédez à cette page : https://www.notion.so/my-integrations.
+- Cliquez sur "New Integration".
+- Nommez votre intégration "SuperNotes" et appuyez sur "Submit".
+- Félicitations ! Vous avez désormais votre clé API. Conservez-la en lieu sûr, vous en aurez besoin pour configurer SuperNotes avec Notion.
+
+De plus, pour configurer correctement votre page Notion avec SuperNotes :
+
+- Connectez-vous à Notion via ce lien : https://www.notion.so.
+- Créez une nouvelle page en cliquant sur "Add New Page" dans le menu de gauche.
+- Sur cette nouvelle page, cliquez sur les trois points en haut à droite.
+- Descendez jusqu'à trouver "Add connections", cliquez dessus.
+- Recherchez "SuperNotes" (il doit avoir le même nom que celui utilisé pour la clé API).
+
+Dans l'URL de la page Notion que vous venez de créer, copiez les 32 derniers caractères après le dernier "/" : par exemple, si l'URL est https://www.notion.so/ma-page-**8210366e115d4a8d8f20d151c7e95308**, l'ID de la page est 8210366e115d4a8d8f20d151c7e95308. Conservez cet ID avec votre clé API, vous en aurez besoin pour l'intégration.
+
+Ces étapes garantissent la liaison efficace entre SuperNotes et votre espace Notion, offrant ainsi une utilisation optimale des fonctionnalités.
+
+### Intégration de l'API Notion
+
+- **Créer une Note sur Notion:** Ajoute la fonctionnalité de création de notes directement sur Notion en utilisant la commande suivante.
+  ```bash
+  sn notion create "Contenu de la note"
+
+- **Mettre à jour le Contenu d'une Note sur Notion :** Permet de mettre à jour le contenu d'une note existante sur Notion en utilisant le contenu actuel de la note et le nouveau contenu spécifié :
+  ```bash
+  sn notion update "Ancien contenu de la note" --note "Nouveau contenu de la note"
+
+- **Enregister le Contenu d'une Page Notion dans Supernotes :** Permet de récupérer le contenu d'une page Notion spécifique :
+  ```bash
+  sn notion get --page "ID_de_la_page_Notion"
+
+- **Exporter les notes créer sur notion :** Permet de créer un fichier avec toutes les notes créer sur notion avec supernotes
+  ```bash
+  sn export --tag "notion" "chemin/vers/fichier.pdf"
+
+- **AEnregistrer les Notes dans une Base de Données SQLite :**  Stocke toutes les notes créer sur notion avec un id_page et parent_id_page.
+
+
+### Commande Help
+
+- **Afficher l'Aide :**  La commande help peut être utilisée pour afficher les commandes disponibles et leurs descriptions.
+  ```bash
+  sn --help
+
 
 ## Groupe
 
 - Dounya Alaoui
 - Aya LAKEHAL
-- Rayan Awasil
