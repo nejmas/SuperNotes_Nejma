@@ -121,7 +121,8 @@ Cette version offre la possibilité de créer, gérer, filtrer et générer des 
 
 La version v0.3 de SuperNote propose les fonctionnalités suivantes :
 
-###Prérequis
+##Intégration de l'API de Notion
+####Prérequis
 - **Clé API Notion :** Pour bénéficier des fonctionnalités intégrées de Notion, une clé API Notion est nécessaire. Vous pouvez obtenir votre clé API depuis votre compte Notion afin d'accéder à ces fonctionnalités. Pour créer votre clé API :
 
 - Accédez à cette page : https://www.notion.so/my-integrations.
@@ -141,7 +142,7 @@ Dans l'URL de la page Notion que vous venez de créer, copiez les 32 derniers ca
 
 Ces étapes garantissent la liaison efficace entre SuperNotes et votre espace Notion, offrant ainsi une utilisation optimale des fonctionnalités.
 
-### Intégration de l'API Notion
+#### Utilisation
 
 - **Créer une Note sur Notion:** Ajoute la fonctionnalité de création de notes directement sur Notion en utilisant la commande suivante.
   ```bash
@@ -160,6 +161,58 @@ Ces étapes garantissent la liaison efficace entre SuperNotes et votre espace No
   sn export --tag "notion" "chemin/vers/fichier.pdf"
 
 - **AEnregistrer les Notes dans une Base de Données SQLite :**  Stocke toutes les notes créer sur notion avec un id_page et parent_id_page.
+
+## Synchroniser les notes avec Google Drive
+
+#### Prérequis
+
+- **SuperNote est actuellement conçu pour une utilisation locale et n'est pas destiné à être accessible au grand public. Pour utiliser la synchronisation avec Google Drive dans cet environnement restreint, il faut suivre les étapes suivantes :
+
+- Créer un compte Google : Chaque utilisateur doit posséder un compte Google valide pour synchroniser ses notes avec Google Drive.
+
+- Configurer l'API Google Drive : Pour activer la synchronisation, l'administrateur de l'application devra ajouter les comptes Google Drive des utilisateurs à la liste des utilisateurs autorisés au niveau de Google Cloud Platforme .
+
+- Accès aux comptes Google dans SuperNote : Une fois que les utilisateurs ont ajouté leurs comptes Google autorisés .
+
+- Tests dans un environnement local : Lorsqu'un utilisateur teste l'application pour la première fois et recherche le fichier exporté dans son compte Google Cloud, il recevra un lien au niveau de termial qui va lui permettre de connecter son compte Google pour cette première utilisation. Par la suite, une fois que le compte est synchronisé, l'utilisateur n'aura plus besoin de réaliser cette action.
+
+
+#### Utilisation
+
+- **Créer une Note de type texte:** 
+  ```bash
+  sn add "Contenu de la note"
+
+- **Ajouter une Note de type texte avec un Tag :** 
+  ```bash
+  sn add "Contenu de la note" --tag mon_tag
+
+- **Créer une Note de type Image:** P
+  ```bash
+  sn add "chemin/vers/image.png"
+
+- **Générer un Rapport de Toutes les Notes :** Crée un rapport sous format PDF contenant toutes les notes existantes.
+spécifié et l'associe à un tag.
+  ```bash
+  sn export --all "chemin/vers/fichier.pdf"
+
+- **Filtrer par Tag pour Générer le Rapport :** Génère un rapport PDF basé sur les notes associées à un tag spécifique.
+  ```bash
+  sn export --tag "mon_tag" "chemin/vers/fichier.pdf"
+
+-** Une fois le fichier qui contient les toutes les notes ou seulement les notes avec un tag spécifique est génére ça nous a affiche :
+
+```
+Connexion à SQLite établie.
+Exportation terminée : chemin/vers/fichier.pdf
+Please open the following address in your browser:
+  https://accounts.google.com/o/oauth2/auth?access_type=offline&client_id=350708336561-evh4reon8308b2hkvtgodv0204d2hj81.apps.googleusercontent.com&redirect_uri=http://localhost:8081/Callback&response_type=code&scope=https://www.googleapis.com/auth/drive.file
+File ID: 1aQzC9lhs1jWMLfGi2bOBzvjvo0T9v8R0
+Fichier téléchargé sur Google Drive
+notes exporter avec succès !
+
+```
+-** Il faut cliquer sur ce lien pour autoriser la synchronisation avec le compte Google de l'utilisateur. Une fois l'autorisation accordée, les fichiers exportés à l'aide de la commande `sn export --tag "mon_tag" "chemin/vers/fichier.pdf"`, par exemple, seront automatiquement disponibles dans son espace Google Drive.
 
 
 ### Commande Help
