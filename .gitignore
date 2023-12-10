@@ -2,6 +2,14 @@ app/build/
 
 .gradle/
 
+*.db
+*.DS_Store
+*.idea/
+*.settings/
+*.vscode/
+app/.DS_Store
+app/.settings/
+bin/
 # Compiled class file
 *.class
 
