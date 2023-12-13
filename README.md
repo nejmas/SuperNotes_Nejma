@@ -176,7 +176,7 @@ Ces étapes garantissent la liaison efficace entre SuperNotes et votre espace No
 
   * Accès aux comptes Google dans SuperNote : Une fois que les utilisateurs ont ajouté leurs comptes Google autorisés .
 
-  * Tests dans un environnement local : Lorsqu'un utilisateur teste l'application pour la première fois et recherche le fichier exporté dans son compte Google Cloud, il recevra un lien au niveau de termial qui va lui permettre de connecter son compte Google pour cette première utilisation. Par la suite, une fois que le compte est synchronisé, l'utilisateur n'aura plus besoin de réaliser cette action.
+  * Tests dans un environnement local : Lorsqu'un utilisateur teste l'application pour la première fois et recherche le fichier exporté dans son compte Google Drive, il recevra un lien au niveau de termial qui va lui permettre de connecter son compte Google pour cette première utilisation. Par la suite, une fois que le compte est synchronisé, l'utilisateur n'aura plus besoin de réaliser cette action et les notes sont enrigistrés automatiquement dans son compte Google Drive.
 
 
 #### Utilisation
