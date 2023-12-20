@@ -66,5 +66,6 @@ jobs:
 
     - name: Generate PDF from Asciidoctor
       run: |
-        asciidoctor-pdf -D ${{ github.workspace }}/app/src/docs/asciidoc/ ${{ github.workspace }}/app/src/docs/asciidoc/main.adoc
-      
+       cd app/src/docs/asciidoc/
+       asciidoctor-pdf main.adoc -o main.pdf
+
