@@ -68,11 +68,6 @@ jobs:
       run: |
         asciidoctor-pdf -D ${{ github.workspace }}/app/src/docs/asciidoc/ ${{ github.workspace }}/app/src/docs/asciidoc/main.adoc
         
-    - name: Commit and push the generated PDF
-      run: |
-        git config --global user.email "github-actions@github.com"
-        git config --global user.name "GitHub Actions"
-        git add app/src/docs/asciidoc/main.pdf
-        git commit -m "Add generated PDF"
-        git push
+    - name: Move PDF to source directory
+      run: mv ${{ github.workspace }}/app/src/docs/asciidoc/main.pdf ${{ github.workspace }}/pp/src/docs/asciidoc/
 
