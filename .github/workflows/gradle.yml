@@ -69,5 +69,13 @@ jobs:
 
     - name: Generate PDF from Asciidoctor
       run: |
-        asciidoctor-pdf -D assets app/src/docs/asciidoc/main.adoc
+        cd app/src/docs/asciidoc/
+        asciidoctor-pdf main.adoc -o main.pdf
+
+    - name: Upload PDF as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: generated-pdf
+        path: app/src/docs/asciidoc/main.pdf
+
 
