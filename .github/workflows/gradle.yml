@@ -67,7 +67,4 @@ jobs:
     - name: Generate PDF from Asciidoctor
       run: |
         asciidoctor-pdf -D ${{ github.workspace }}/app/src/docs/asciidoc/ ${{ github.workspace }}/app/src/docs/asciidoc/main.adoc
-        
-    - name: Move PDF to source directory
-      run: mv ${{ github.workspace }}/app/src/docs/asciidoc/main.pdf ${{ github.workspace }}/app/src/docs/asciidoc/
-
+      
