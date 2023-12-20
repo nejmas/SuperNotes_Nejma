@@ -66,11 +66,13 @@ jobs:
 
     - name: Generate PDF from Asciidoctor
       run: |
-        asciidoctor-pdf -D pp/src/docs/asciidoc/ app/src/docs/asciidoc/main.adoc
-          
-    - name: Upload PDF to release assets
-      uses: actions/upload-artifact@v2
-      with:
-        name: generated-pdf
-        path: pp/src/docs/asciidoc/main.pdf
+        asciidoctor-pdf -D ${{ github.workspace }}/app/src/docs/asciidoc/ ${{ github.workspace }}/app/src/docs/asciidoc/main.adoc
+        
+    - name: Commit and push the generated PDF
+      run: |
+        git config --global user.email "github-actions@github.com"
+        git config --global user.name "GitHub Actions"
+        git add app/src/docs/asciidoc/main.pdf
+        git commit -m "Add generated PDF"
+        git push
 
