@@ -1,11 +1,16 @@
 package supernotes.notes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TextNote implements Note<String> {
+    private int id;
     private String title;
     private String content;
     private String tag;
     private String ParentPageId;
     private String pageId;
+    
 
     public TextNote() {}
 
@@ -16,9 +21,18 @@ public class TextNote implements Note<String> {
         this.tag = tag;
         this.ParentPageId = ParentPageId;
         this.pageId = pageId;
+        // this.reminders = new ArrayList<>();
     }
 
-            
+    @Override 
+    public int getId() {
+        return this.id;
+    }
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String getTitle() {
         return title;

@@ -1,13 +1,17 @@
 package supernotes.notes;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImageNote implements Note<byte[]> {
+    private int id;
     private String title;
     private byte[] content;
     private String tag;
     private String pageId;
     private String parentPageId;
+
 
     public ImageNote() {}
 
@@ -18,6 +22,17 @@ public class ImageNote implements Note<byte[]> {
         this.tag = tag;
         this.parentPageId = parentPageId;
         this.pageId = pageId;
+        // this.reminders = new ArrayList<>();
+
+    }
+
+    @Override 
+    public int getId() {
+        return this.id;
+    }
+    @Override
+    public void setId(int id) {
+        this.id = id;
     }
         
     @Override
