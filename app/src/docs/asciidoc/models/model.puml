@@ -47,6 +47,7 @@ class NoteManager implements INoteManager {
 interface FileHandler {
     +exportPdfFile(String: filePath): void 
     +exportPdfFileUsingFilter(String: filePath, String: filter): void
+    +exportToText(String: filePath): void
 }
 
 class FileManager implements FileHandler {
@@ -116,6 +117,14 @@ class NotionPageManager implements NotionManager{
     +extractPageTitle(String newPage): String
     }  
 
+class GoogleCalendarReminder{
+    +addEventToCalendar(String: noteContent, String: startDateTime): void
+    }  
+
+class GoogleCalendarService{
+    +getCalendarService(): Calendar
+    }  
+
 Note <|.. TextNote
 Note <|.. ImageNote
 
@@ -128,6 +137,7 @@ NoteFactory ..> Note : creates
 NoteManager ..> Note : manages
 FileHandler ..> Note : handles
 NotionAPI ..> Note : manage
+GoogleCalendarReminder ..> Note : manage
 NotionPageManager ..> NotionAPI
 
 CommandLineInterface ..> NoteManager : sendsCommands
@@ -135,6 +145,7 @@ CommandLineInterface ..> NotionApiManager : sendsCommands
 
 FileManager ..> DriveQuickstart: uses
 
+GoogleCalendarReminder ..> GoogleCalendarService
 @enduml
 =======
 
