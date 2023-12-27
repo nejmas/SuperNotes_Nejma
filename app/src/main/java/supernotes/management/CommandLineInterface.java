@@ -5,12 +5,20 @@ import supernotes.notes.*;
 import supernotes.notionAPI.NotionAPI;
 import supernotes.notionAPI.NotionApiManager;
 import supernotes.notionAPI.NotionManager;
-import supernotes.notionAPI.NotionAPI;
+import supernotes.reminders.GoogleCalendarReminder;
 
+import java.security.GeneralSecurityException;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.google.api.client.util.DateTime;
 
 public class CommandLineInterface {
     private final NoteFactory textNoteFactory;
@@ -57,6 +65,18 @@ public class CommandLineInterface {
         Pattern helpPattern = Pattern.compile("sn --help");
         Matcher helpMatcher = helpPattern.matcher(command);
 
+        Pattern addNoteWithReminderPattern = Pattern.compile("sn add \"([^\"]*)\"(?: --tag \"([^\"]*)\")? --reminder \"([^\"]*)\"");
+        Matcher addNoteWithReminderMatcher = addNoteWithReminderPattern.matcher(command);
+
+        Pattern getNoteWithReminderPattern = Pattern.compile("sn get --reminder --tag \"(.*)\"$");
+        Matcher getNoteWithReminderMatcher = getNoteWithReminderPattern.matcher(command);
+
+        Pattern deleteReminderForNotePattern = Pattern.compile("sn delete --reminder --tag \"(.*)\"$");
+        Matcher deleteReminderForNoteMatcher = deleteReminderForNotePattern.matcher(command);
+
+        Pattern exportTXTPattern = Pattern.compile("sn export --text \"(.*)\"$");
+        Matcher exportTXTMatcher = exportTXTPattern.matcher(command);
+        
         
         if (addNoteMatcher.matches()) {
             String noteContent = addNoteMatcher.group(1);
@@ -163,14 +183,111 @@ public class CommandLineInterface {
 
             if (newPage != null && !newPage.isEmpty()) {
                 String newPageId = notionManager.extractNewPageId(newPage);
-                Note note = noteFactory.createNote(null, content, null, parentPageId, newPageId);
+                Note note = noteFactory.createNote(null, content, "notion", parentPageId, newPageId);
                 System.out.println("Note ajoutée avec succès !");
                 noteManager.addNote(note);
         }
     }
 
+    else if (getNoteWithReminderMatcher.matches()) {
+        String tag = getNoteWithReminderMatcher.group(1);
+
+        List<Note> allNotesByTag = noteManager.getByTag(tag);
+    
+        if (!allNotesByTag.isEmpty()) {
+            for (Note note : allNotesByTag) {
+                int noteId = note.getId(); // Récupération de l'ID de la note
+    
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                List<LocalDateTime> reminders = noteManager.getReminders(noteId);
+    
+                if (!reminders.isEmpty()) {
+                    // Affiche les rappels associés à la note avec le tag spécifique
+                    System.out.println("Rappels pour la note avec l'ID " + noteId + " : " + note.getContent());
+                    for (LocalDateTime reminder : reminders) {
+                        String formattedReminder = reminder.format(formatter);
+                        System.out.println("- " + formattedReminder);
+                    }
+                } else {
+                    // Aucun rappel trouvé pour cette note
+                    System.out.println("Aucun rappel trouvé pour la note avec l'ID " + noteId + " : " + note.getContent());
+                }
+            }
+        } else {
+            System.out.println("Aucune note trouvée avec ce tag.");
+        }
+    }
+    
+
     else if (helpMatcher.matches()){
         displayHelp();
+    }
+
+    else if (addNoteWithReminderMatcher.matches()) {
+        try {
+            String noteContent = addNoteWithReminderMatcher.group(1);
+            String noteTag = addNoteWithReminderMatcher.group(2);
+            String reminder = addNoteWithReminderMatcher.group(3);
+
+            // Création d'une nouvelle note
+            NoteFactory noteFactory = isImage(noteContent) ? imageNoteFactory : textNoteFactory;
+            Note note = noteFactory.createNote(null, noteContent, noteTag, null, null);
+            int noteId = noteManager.addNote(note);
+
+            DateTimeFormatter userDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime reminderDateTime = LocalDateTime.parse(reminder, userDateTimeFormatter);
+            
+            noteManager.addReminder(noteId, reminderDateTime);
+
+            // Formatter pour le format attendu par Google Calendar
+            DateTimeFormatter googleCalendarDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+    
+            // Conversion de la date saisie par l'utilisateur au format LocalDateTime
+            LocalDateTime localDateTime = LocalDateTime.parse(reminder, userDateTimeFormatter);
+            String formattedDate = localDateTime.atOffset(ZoneOffset.UTC).format(googleCalendarDateTimeFormatter);
+
+            DateTime startDateTime = new DateTime(formattedDate);
+
+            noteManager.addNoteWithReminderToCalendar(noteContent, startDateTime.toString());
+        
+            System.out.println("Note avec rappel ajoutée avec succès !");
+        } catch (DateTimeParseException e) {
+            System.out.println("Format de date/heure invalide. Utilisez le format 'yyyy-MM-dd HH:mm'.");
+        }
+    }
+
+    else if (deleteReminderForNoteMatcher.matches()) {
+        String tag = deleteReminderForNoteMatcher.group(1);
+
+        List<Note> allNotesByTag = noteManager.getByTag(tag);
+    
+        if (!allNotesByTag.isEmpty()) {
+            boolean anyReminderDeleted = false;
+            for (Note note : allNotesByTag) {
+                int noteId = note.getId(); // Récupération de l'ID de la note
+                boolean reminderDeleted = noteManager.deleteRemindersByNoteId(noteId);
+                if (!reminderDeleted) {
+                    anyReminderDeleted = true;
+                } else {
+                    // Aucun rappel trouvé pour cette note
+                    System.out.println("Aucun rappel trouvé pour la note avec le tag '" + tag + "' : " + note.getContent());
+                }
+            }
+            if (anyReminderDeleted) {
+                System.out.println("Rappels pour les notes avec le tag '" + tag + "' ont été supprimés avec succès !");
+            }
+        } else {
+            System.out.println("Aucune note trouvée avec ce tag.");
+        }
+    }
+
+
+    else if (exportTXTMatcher.matches()) {
+        String filePath = exportTXTMatcher.group(1);
+
+        fileHandler.exportToText(filePath);
+        System.out.println("notes exporter avec succès !");
+
     }
 
     else if(!command.equals("exit")) {
@@ -185,16 +302,32 @@ public class CommandLineInterface {
     public void displayHelp() {
         System.out.println("Bienvenue dans SuperNotes !");
         System.out.println("Voici les commandes disponibles :");
-        System.out.println("- Pour ajouter une note : sn add \"Contenu de la note\" --tag \"Tag de la note\" (le tag est facultatif)");
+        System.out.println("- Pour ajouter une note texte: sn add \"Contenu de la note\" --tag \"Tag de la note\" (le tag est facultatif)");
+        System.out.println("- Pour ajouter une note image : sn add \"Chemin de l'image\" --tag \"Tag de la note\" (le tag est facultatif)");
         System.out.println("- Pour exporter toutes les notes en PDF : sn export --all \"Chemin du fichier PDF\"");
+        System.out.println("- Pour exporter toutes les notes en TXT : sn export --text \"Chemin du fichier TXT\"");
         System.out.println("- Pour supprimer des notes par tag : sn delete --tag \"Tag de la note\"");
         System.out.println("- Pour exporter des notes par tag en PDF : sn export --tag \"Tag de la note\" \"Chemin du fichier PDF\"");
         System.out.println("- Pour exporter des notes filtrées par mot clé en PDF : sn export --word \"Mot clé\" \"Chemin du fichier PDF\" (le mot clé est facultatif)");
         System.out.println("- Pour obtenir le contenu d'une page Notion : sn notion get --page \"ID de la page\"");
         System.out.println("- Pour mettre à jour le contenu d'une page Notion : sn notion update \"Nouveau contenu\" --note \"Ancien contenu\"");
         System.out.println("- Pour créer une nouvelle page Notion : sn notion create \"Contenu de la nouvelle page\"");
+        System.out.println("- Pour ajouter une note avec rappel : sn add \"Contenu de la note\" --tag \"Tag de la note\" --reminder \"Date et heure du rappel\"");
+        System.out.println("- Pour Afficher les rappels pour une note par tag : sn get --reminder --tag \"Tag de la note\"");
+        System.out.println("- Pour supprimer les rappels pour une note par tag : sn delete --reminder --tag \"Tag de la note\"");
         System.out.println("Pour quitter l'application : exit");
+        
+        System.out.println("\nExemples :");
+        System.out.println("- sn add \"Acheter du lait\" --tag \"Courses\"");
+        System.out.println("- sn export --all \"C:\\Users\\Utilisateur\\Desktop\\notes.pdf\"");
+        System.out.println("- sn delete --tag \"Courses\"");
+        System.out.println("- sn notion get --page \"123456\"");
+        System.out.println("- sn notion update \"Nouveau contenu\" --note \"Ancien contenu\"");
+        System.out.println("- sn notion create \"Contenu de la nouvelle page\"");
+        System.out.println("- sn add \"Rendez-vous chez le dentiste\" --tag \"Rendez-vous\" --reminder \"2023-12-31 09:00\"");
+        System.out.println("- sn delete --reminder --tag \"Rendez-vous\"");
     }
+    
 
 }
 

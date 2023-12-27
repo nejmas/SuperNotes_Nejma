@@ -9,8 +9,11 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SQLiteDBManager implements DBManager {
     private Connection connection;
@@ -39,12 +42,89 @@ public class SQLiteDBManager implements DBManager {
             e.printStackTrace();
         }
     }
-    
+
+        
+    @Override
+    public void createRemindersTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS Reminders ("
+            + "id INT AUTO_INCREMENT PRIMARY KEY,"
+            + "note_id INT,"
+            + "reminder_date_time DATETIME,"
+            + "FOREIGN KEY (note_id) REFERENCES Notes(id)"
+            + ")";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
-    public void addTextNote(String title, String content, String tag, String parent_page_id, String page_id)
+    public void addReminder(int noteId, LocalDateTime reminderDateTime) {
+    String sql = "INSERT INTO Reminders (note_id, reminder_date_time) VALUES (?, ?)";
+        try (var conn = this.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, noteId);
+            pstmt.setTimestamp(2, Timestamp.valueOf(reminderDateTime));
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<LocalDateTime> getReminders(int noteId) {
+        List<LocalDateTime> reminders = new ArrayList<>();
+    
+        String sql = "SELECT reminder_date_time FROM Reminders WHERE note_id = ?";
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, noteId);
+            ResultSet rs = pstmt.executeQuery();
+    
+            while (rs.next()) {
+                Timestamp reminderTimestamp = rs.getTimestamp("reminder_date_time");
+                LocalDateTime reminderDateTime = reminderTimestamp.toLocalDateTime();
+                reminders.add(reminderDateTime);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return reminders;
+    }
+
+    @Override
+    public boolean deleteRemindersByNoteId(int noteId) {
+        String sql = "DELETE FROM reminders WHERE note_id = ?";
+        boolean success = false;
+    
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, noteId);
+    
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Tous les rappels pour la note avec l'ID " + noteId + " ont été supprimés avec succès !");
+                success = true;
+            } else {
+                System.out.println("Aucun rappel trouvé pour la note avec l'ID " + noteId + ".");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la suppression des rappels pour la note avec l'ID " + noteId + " : " + e.getMessage());
+        }
+    
+        return success;
+    }
+    
+    
+    @Override
+    public int addTextNote(String title, String content, String tag, String parent_page_id, String page_id)
     {
         String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id) VALUES (?, ?, ?, ?, ?, ?)";
+        int noteId = -1;
+
         try (var conn = this.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, title);
@@ -53,16 +133,26 @@ public class SQLiteDBManager implements DBManager {
             pstmt.setString(4, tag);
             pstmt.setString(5, parent_page_id);
             pstmt.setString(6, page_id);
-            pstmt.executeUpdate();
+
+            int rowsInserted = pstmt.executeUpdate();
+            if (rowsInserted > 0) {
+                ResultSet generatedKeys = pstmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    noteId = generatedKeys.getInt(1); // Récupérer l'ID généré
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return noteId;
     }
 
     @Override
-    public void addImageNote(String title, byte[] imageBytes, String tag, String parent_page_id, String page_id)
+    public int addImageNote(String title, byte[] imageBytes, String tag, String parent_page_id, String page_id)
     {
         String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id) VALUES (?, ?, ?, ?, ?, ?)";
+        int noteId = -1;
+
         try (var conn = this.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setString(1, title);
@@ -71,10 +161,17 @@ public class SQLiteDBManager implements DBManager {
             pstmt.setString(4, tag);
             pstmt.setString(5, parent_page_id);
             pstmt.setString(6, page_id);
-            pstmt.executeUpdate();
+            int rowsInserted = pstmt.executeUpdate();
+            if (rowsInserted > 0) {
+                ResultSet generatedKeys = pstmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    noteId = generatedKeys.getInt(1); // Récupérer l'ID généré
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return noteId;
     }
 
     @Override
@@ -144,21 +241,28 @@ public class SQLiteDBManager implements DBManager {
                 // loop through the result set
                 while (rs.next()) {
                     var type = rs.getString("type");
-                    if (type.equals("text")){
-                        result.add(new TextNote(
+                    int noteId = rs.getInt("id");
+
+                    if (type.equals("text")) {
+                        TextNote textNote = new TextNote(
                             rs.getString("title"),
                             rs.getString("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
-                            rs.getString("page_id")));
-                    }
-                    else if (type.equals("image")){
-                        result.add(new ImageNote(
-                                rs.getString("title"),
-                                rs.getBytes("image"),
-                                rs.getString("tag"),
-                                rs.getString("parent_page_id"),
-                                rs.getString("page_id")));
+                            rs.getString("page_id")
+                        );
+                        textNote.setId(noteId);
+                        result.add(textNote);
+                    } else if (type.equals("image")) {
+                        ImageNote imageNote = new ImageNote(
+                            rs.getString("title"),
+                            rs.getBytes("image"),
+                            rs.getString("tag"),
+                            rs.getString("parent_page_id"),
+                            rs.getString("page_id")
+                        );
+                        imageNote.setId(noteId);
+                        result.add(imageNote);
                     }
                 }
             }
@@ -288,6 +392,7 @@ public class SQLiteDBManager implements DBManager {
             // Créer une connexion à la base de données
             connection = DriverManager.getConnection("jdbc:sqlite:notes.db");
             createNotesTable();
+            createRemindersTable();
             System.out.println("Connexion à SQLite établie.");
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
