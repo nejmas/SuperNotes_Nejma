@@ -110,7 +110,6 @@ public class FileManager implements FileHandler {
         List<Note> notes = dbManager.getAllNotes();
 
         for (Note note : notes) {
-            writer.write("Note ID: " + note.getId() + "\n");
             writer.write("Tag: " + note.getTag() + "\n");
             writer.write("Content: " + note.getContent() + "\n\n");
         }
