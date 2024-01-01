@@ -1,25 +1,62 @@
 package supernotes.notes;
 
-import java.awt.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class ImageNote implements Note<byte[]> {
     private String title;
+    private String type;
     private byte[] content;
     private String tag;
     private String pageId;
     private String parentPageId;
+    private String time;
+    private String path;
 
-    public ImageNote() {}
+    public ImageNote(String title, String type, byte[] content, String tag, String pageId, String parentPageId, String time, String path) {
+        this.title = title;
+        this.content = content;
+        this.tag = tag;
+        this.pageId = pageId;
+        this.type = type;
+        this.parentPageId = parentPageId;
+        this.time = time;
+        this.path = path;
+    }
 
-    public ImageNote(String title, byte[] content, String tag,  String parentPageId, String pageId)
-    {
+    public ImageNote() {
+    }
+
+    public ImageNote(String title, byte[] content, String tag, String parentPageId, String pageId) {
         this.title = title;
         this.content = content;
         this.tag = tag;
         this.parentPageId = parentPageId;
         this.pageId = pageId;
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
+        this.time = dateTime.format(formatter);
     }
-        
+
+    public ImageNote(String title, byte[] content, String tag, String pageId, String parentPageId, String time) {
+        this.title = title;
+        this.content = content;
+        this.tag = tag;
+        this.pageId = pageId;
+        this.parentPageId = parentPageId;
+        this.time = time;
+    }
+
+    public ImageNote(String title, String path, byte[] imageBytes, String tag, String parentPageId, String pageId) {
+        this.title = title;
+        this.content = content;
+        this.tag = tag;
+        this.pageId = pageId;
+        this.parentPageId = parentPageId;
+        this.time = time;
+        this.path = path;
+    }
+
     @Override
     public String getTitle() {
         return title;
@@ -69,5 +106,25 @@ public class ImageNote implements Note<byte[]> {
     public void setParentPageId(String parentPageId) {
         this.parentPageId = parentPageId;
     }
-    
+
+    @Override
+    public String getTime() {
+        return time;
+    }
+
+    @Override
+    public void setTime(String newTime) {
+        this.time = newTime;
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public String getPath() {
+        return path;
+    }
+
 }

@@ -11,4 +11,5 @@ public interface NoteManager{
     String getPageId(String Content);
     void updateNoteContentInDB(String pageId, String newContent);
     boolean doesNoteExist(String pageId);
+    List<Note> showAllNotes();
 }

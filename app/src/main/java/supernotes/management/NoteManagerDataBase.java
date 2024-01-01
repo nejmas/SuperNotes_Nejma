@@ -4,6 +4,10 @@ import supernotes.notes.ImageNote;
 import supernotes.notes.Note;
 import supernotes.notes.TextNote;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 public class NoteManagerDataBase implements NoteManager {
     DBManager dbManager;
 
@@ -19,8 +23,11 @@ public class NoteManagerDataBase implements NoteManager {
             String noteTag = note.getTag();
             String parent_page_id = note.getParentPageId();            
             String page_id = note.getPageId();
+            LocalDateTime dateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
+            String time = dateTime.format(formatter);
 
-            dbManager.addTextNote(title, noteContent, noteTag, parent_page_id, page_id);
+            dbManager.addTextNote(title, "text", noteContent, noteTag, parent_page_id, page_id, time);
         }
         else if (note instanceof ImageNote){
             String title = note.getTitle();
@@ -28,8 +35,13 @@ public class NoteManagerDataBase implements NoteManager {
             String noteTag = note.getTag();
             String parent_page_id = note.getParentPageId();     
             String page_id = note.getPageId();
+            LocalDateTime dateTime = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
+            String time = dateTime.format(formatter);
+            String type = "image";
+            String path = note.getPath();
 
-            dbManager.addImageNote(title, imageContent, noteTag, parent_page_id, page_id);
+            dbManager.addImageNote(title, "image", imageContent, noteTag, parent_page_id, page_id, time, path);
         }
     }
 
@@ -62,5 +74,10 @@ public class NoteManagerDataBase implements NoteManager {
     {
         return dbManager.doesNoteExist(pageId);
     }
-    
+
+    @Override
+    public List<Note> showAllNotes() {
+        return dbManager.getAllNotes();
+    }
+
 }
