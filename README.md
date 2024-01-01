@@ -242,31 +242,31 @@ Cette fonctionnalité vise à offrir aux utilisateurs la possibilité de gérer 
 
 Pour exécuter l'extension Visual Studio Code :
 
-1- Téléchargez le dossier compressé nommé "Jarunner" qui se trouve dans le fichier SuperNote, ainsi que le fichier `app-all.jar` qui se trouve dans `SuperNotes/app/build/libs`.
+- **Téléchargez le dossier compressé nommé "Jarunner" qui se trouve dans le fichier SuperNote, ainsi que le fichier `app-all.jar` qui se trouve dans `SuperNotes/app/build/libs`.**
 
-2- Décompressez le dossier compressé et placez le dossier "jarunner" dans le dossier des extensions de votre Visual Studio Code sur votre ordinateur.
+- **Décompressez le dossier compressé et placez le dossier "jarunner" dans le dossier des extensions de votre Visual Studio Code sur votre ordinateur.**
 
-Pour utubuntu : 
+- **Pour utubuntu :**
 
 - Utilisez ubutun utilisez la commande : "sudo cp -r jarunner /shemin ou le fichier extension se trouve " dans mon cas c'était `sudo cp -r jarunner /usr/share/code/resources/app/extensions/`
 
-3- Ouvrez Visual Studio Code et ajoutez le dossier (jarunner) à votre espace de travail.
+- **Ouvrez Visual Studio Code et ajoutez le dossier (jarunner) à votre espace de travail.**
 
-4- Dans le dossier SRC, il y a un fichier nommé "extension.ts". Ouvrez ce fichier.
+- **Dans le dossier SRC, il y a un fichier nommé "extension.ts". Ouvrez ce fichier.**
 
-5- Dans le fichier "extension.ts", il y a une ligne comme suit : const command = `java -jar "${'/Users/Downloads/app-all.jar'}"`
+- **Dans le fichier "extension.ts", il y a une ligne comme suit : const command = `java -jar "${'/Users/Downloads/app-all.jar'}"`**
 
-6- Vous devez remplacer le chemin `/Users/engr/Downloads/app-all.jar` par le chemin du fichier `app-all.jar` sur votre ordinateur.
+- **Vous devez remplacer le chemin `/Users/engr/Downloads/app-all.jar` par le chemin du fichier `app-all.jar` sur votre ordinateur.**
 
-Pour Mac, ladresse utilisera un seul '/' et pour Windows, elle utilisera deux '//'.
+- Pour Mac, ladresse utilisera un seul '/' et pour Windows, elle utilisera deux '//'.
 
-Par exemple, adresse Mac '/Users/engr/Downloads/app-all.jar' et  Windows 'C://Users//engr//Downloads//app-all.jar'
+- Par exemple, adresse Mac '/Users/engr/Downloads/app-all.jar' et  Windows 'C://Users//engr//Downloads//app-all.jar'
 
-7- Après avoir modifié cette adresse, compilez-le en utilisant ctrl+shift+B (Windows & ubuntu) et cmd+shift+B (Mac).
+- **Après avoir modifié cette adresse, compilez-le en utilisant ctrl+shift+B (Windows & ubuntu) et cmd+shift+B (Mac).**
 
-8- Après une compilation réussie, redémarrez Visual Studio Code et votre extension sexécutera en utilisant la commande suivante :
-                           ctrl+alt+J (Windows)
-                           cmd+alt+J (Mac)
+- **Après une compilation réussie, redémarrez Visual Studio Code et votre extension sexécutera en utilisant la commande suivante :**
+        - ctrl+alt+J (Windows)
+        - cmd+alt+J (Mac)
 
 ## Affichage des Notes dans le Terminal de SuperNote
 
@@ -274,7 +274,8 @@ Cette fonctionnalité permet à l'utilisateur de SuperNote d'afficher ses notes 
 
 #### Utilisation
 
-Une fois les notes sont crées à l'aide des commande :
+- **Une fois les notes sont crées à l'aide des commande :**
+
 `sn add "Contenu de la note"`
 
 `sn add "Contenu de la note" --tag mon_tag`
