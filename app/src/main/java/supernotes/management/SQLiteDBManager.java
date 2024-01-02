@@ -25,14 +25,6 @@ public class SQLiteDBManager implements DBManager {
 
     @Override
     public void createNotesTable() {
-
-//        // Check if the "time" column exists
-//        boolean timeColumnExists = checkTimeColumn();
-//
-//        if (!timeColumnExists) {
-//            // If the "time" column is missing, add it to the table
-//            addTimeColumn();
-//        }
         String sql = "CREATE TABLE IF NOT EXISTS notes (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "title TEXT," +
@@ -52,49 +44,7 @@ public class SQLiteDBManager implements DBManager {
         }
     }
 
-
-//    private boolean checkTimeColumn() {
-//        // Check if the "time" column exists in the table
-//        String checkSql = "PRAGMA table_info(notes)";
-//        try (Statement stmt = connection.createStatement();
-//             ResultSet rs = stmt.executeQuery(checkSql)) {
-//
-//            while (rs.next()) {
-//                String columnName = rs.getString("name");
-//                if ("time".equals(columnName)) {
-//                    return true; // "time" column exists
-//                }
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return false; // "time" column does not exist
-//    }
-//
-//    private void addTimeColumn() {
-//        // Add the "time" column to the table
-//        String alterSql = "ALTER TABLE notes ADD COLUMN time TEXT";
-//        try (Statement stmt = connection.createStatement()) {
-//            stmt.execute(alterSql);
-//            System.out.println("Ajout de la colonne « heure » au tableau des notes.");
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-    @Override
-    public void addTextNote(String title, String content, String tag, String parent_page_id, String page_id) {
-
-    }
-
-
-    @Override
-    public void addTextNote(String title, String type, String content, String tag, String parent_page_id, String page_id, String time)
-    {
-        String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id, time) VALUES (?, ?, ?, ?, ?, ?,?)";
-
-        
+    
     @Override
     public void createRemindersTable() {
         String sql = "CREATE TABLE IF NOT EXISTS Reminders ("
@@ -171,9 +121,9 @@ public class SQLiteDBManager implements DBManager {
     
     
     @Override
-    public int addTextNote(String title, String content, String tag, String parent_page_id, String page_id)
+    public int addTextNote(String title, String content, String tag, String parent_page_id, String page_id, String time)
     {
-        String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id, time) VALUES (?, ?, ?, ?, ?, ?, ?)";
         int noteId = -1;
         try (var conn = this.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -183,7 +133,6 @@ public class SQLiteDBManager implements DBManager {
             pstmt.setString(4, tag);
             pstmt.setString(5, parent_page_id);
             pstmt.setString(6, page_id);
-
             pstmt.setString(7,time);
             pstmt.executeUpdate();
 
@@ -202,35 +151,19 @@ public class SQLiteDBManager implements DBManager {
         return noteId;
     }
 
-    @Override
-    public void addImageNote(String title, byte[] imageBytes, String tag, String parent_page_id, String page_id) {
-
-    }
-
-    @Override
-    public void addImageNote(String title, String type, byte[] imageBytes, String tag, String parent_page_id, String page_id, String time, String path)
+    public int addImageNote(String title, byte[] imageBytes, String tag, String parent_page_id, String page_id, String time)
     {
-        String sql = "INSERT INTO notes (title, type, content, image, tag, parent_page_id, page_id, time) VALUES (?, ?, ?, ?, ?, ?,?,?)";
-
-    public int addImageNote(String title, byte[] imageBytes, String tag, String parent_page_id, String page_id)
-    {
-        String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id, time) VALUES (?, ?, ?, ?, ?, ?, ?)";
         int noteId = -1;
         try (var conn = this.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql);) {
             pstmt.setString(1, title);
             pstmt.setString(2, "image");
-            pstmt.setString(3,"Chemin de l'image : "+path);
-            pstmt.setBytes(4, imageBytes);
-            pstmt.setString(5, tag);
-            pstmt.setString(6, parent_page_id);
-            pstmt.setString(7, page_id);
-            pstmt.setString(8,time);
-            pstmt.executeUpdate();
             pstmt.setBytes(3, imageBytes);
             pstmt.setString(4, tag);
             pstmt.setString(5, parent_page_id);
             pstmt.setString(6, page_id);
+            pstmt.setString(7,time);
             int rowsInserted = pstmt.executeUpdate();
             if (rowsInserted > 0) {
                 ResultSet generatedKeys = pstmt.getGeneratedKeys();
