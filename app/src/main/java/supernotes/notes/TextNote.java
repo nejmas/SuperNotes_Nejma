@@ -120,13 +120,8 @@ public class TextNote implements Note<String> {
         this.time = time;
     }
 
-    @Override
     public String getType() {
         return type;
     }
 
-    @Override
-    public String getPath() {
-        return null;
-    }
 }
