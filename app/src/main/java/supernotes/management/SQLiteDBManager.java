@@ -121,9 +121,9 @@ public class SQLiteDBManager implements DBManager {
     
     
     @Override
-    public int addTextNote(String title, String content, String tag, String parent_page_id, String page_id, String time, String path)
+    public int addTextNote(String title, String content, String tag, String parent_page_id, String page_id, String time)
     {
-        String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id, time, path) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id, time) VALUES (?, ?, ?, ?, ?, ?, ?)";
         int noteId = -1;
         try (var conn = this.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -134,7 +134,6 @@ public class SQLiteDBManager implements DBManager {
             pstmt.setString(5, parent_page_id);
             pstmt.setString(6, page_id);
             pstmt.setString(7,time);
-            pstmt.setString(8,path);
             pstmt.executeUpdate();
 
 
