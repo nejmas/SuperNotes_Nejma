@@ -208,7 +208,6 @@ public class SQLiteDBManager implements DBManager {
                 if (type.equals("text")){
                     result.add(new TextNote(
                             rs.getString("title"),
-                            rs.getString("type"),
                             rs.getString("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
@@ -218,7 +217,6 @@ public class SQLiteDBManager implements DBManager {
                 else if (type.equals("image")){
                     result.add(new ImageNote(
                             rs.getString("title"),
-                            rs.getString("type"),
                             rs.getString("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
