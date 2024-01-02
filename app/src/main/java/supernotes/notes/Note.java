@@ -30,8 +30,4 @@ public interface Note<T> {
 
     String getType();
 
-
-    void setParentPageId(String pageId); 
-
-
 }
