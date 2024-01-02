@@ -175,19 +175,14 @@ public class CommandLineInterface {
                 noteManager.addNote(note);
 
             }
-        } else if (helpMatcher.matches()) {
-            displayHelp();
-        } else if (showAllMatcher.matches()) {
+
+        else if (showAllMatcher.matches()) {
             List<Note> showAllNotes = new ArrayList<>();
             showAllNotes = noteManager.showAllNotes();
             System.out.println("Notes :- \n\n\n");
             showAllNotesDesigner(showAllNotes);
-        } else if (!command.equals("exit")) {
-
         }
-    }
-
-    else if (getNoteWithReminderMatcher.matches()) {
+        else if (getNoteWithReminderMatcher.matches()) {
         String tag = getNoteWithReminderMatcher.group(1);
 
         List<Note> allNotesByTag = noteManager.getByTag(tag);
