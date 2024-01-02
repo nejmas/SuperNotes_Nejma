@@ -1,24 +1,65 @@
 package supernotes.notes;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class TextNote implements Note<String> {
+    private int id;
     private String title;
+    private String type;
     private String content;
     private String tag;
     private String ParentPageId;
     private String pageId;
+    private String time;
 
-    public TextNote() {}
+    
+    public TextNote() {
+    }
 
-    public TextNote(String title, String content, String tag, String ParentPageId, String pageId)
-    {
+    public TextNote(String title, String content, String tag, String ParentPageId, String pageId) {
         this.title = title;
         this.content = content;
         this.tag = tag;
         this.ParentPageId = ParentPageId;
         this.pageId = pageId;
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
+        this.time = dateTime.format(formatter);
     }
 
-            
+    public TextNote(String title, String content, String tag, String parentPageId, String pageId, String time) {
+        this.title = title;
+        this.content = content;
+        this.tag = tag;
+        ParentPageId = parentPageId;
+        this.pageId = pageId;
+        this.time = time;
+    }
+
+    public TextNote(String title, String type,String content, String tag, String parentPageId, String pageId, String time) {
+        this.title = title;
+        this.content = content;
+        this.tag = tag;
+        ParentPageId = parentPageId;
+        this.pageId = pageId;
+        this.time = time;
+        this.type = type;
+        // this.reminders = new ArrayList<>();
+    }
+
+    @Override 
+    public int getId() {
+        return this.id;
+    }
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
     @Override
     public String getTitle() {
         return title;
@@ -67,5 +108,25 @@ public class TextNote implements Note<String> {
     @Override
     public void setParentPageId(String ParentPageId) {
         this.ParentPageId = ParentPageId;
+    }
+
+    @Override
+    public String getTime() {
+        return time;
+    }
+
+    @Override
+    public void setTime(String newTime) {
+        this.time = time;
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public String getPath() {
+        return null;
     }
 }

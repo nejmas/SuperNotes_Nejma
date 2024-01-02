@@ -164,9 +164,9 @@ Ces étapes garantissent la liaison efficace entre SuperNotes et votre espace No
 
 - **AEnregistrer les Notes dans une Base de Données SQLite :**  Stocke toutes les notes créer sur notion avec un id_page et parent_id_page.
 
-### Synchroniser les notes avec Google Drive
+## Synchroniser les notes avec Google Drive
 
-### Prérequis
+#### Prérequis
 
 - SuperNote est actuellement conçu pour une utilisation locale et n'est pas destiné à être accessible au grand public. Pour utiliser la synchronisation avec Google Drive dans cet environnement restreint, il faut suivre les étapes suivantes :
 
@@ -189,7 +189,7 @@ Ces étapes garantissent la liaison efficace entre SuperNotes et votre espace No
   ```bash
   sn add "Contenu de la note" --tag mon_tag
 
-- **Créer une Note de type Image:** P
+- **Créer une Note de type Image:** 
   ```bash
   sn add "chemin/vers/image.png"
 
@@ -219,11 +219,110 @@ notes exporter avec succès !
 - Il faut cliquer sur ce lien pour autoriser la synchronisation avec le compte Google de l'utilisateur. Une fois l'autorisation accordée, les fichiers exportés à l'aide de la commande `sn export --tag "mon_tag" "chemin/vers/fichier.pdf"`, par exemple, seront automatiquement disponibles dans son espace Google Drive.
 
 
-### Commande Help
+## Commande Help
 
 - **Afficher l'Aide :**  La commande help peut être utilisée pour afficher les commandes disponibles et leurs descriptions.
   ```bash
   sn --help
+
+## Version v0.4
+
+La version v0.4 de SuperNote propose les fonctionnalités suivantes :
+
+## Intégration de l'API Google Calendar
+
+#### Prérequis
+
+- SuperNote est actuellement conçu pour une utilisation locale et n'est pas destiné à être accessible au grand public. Pour utiliser la synchronisation avec Google Calendar, il faut suivre les étapes suivantes :
+
+  * Créer un compte Google : Chaque utilisateur doit posséder un compte Google valide.
+
+  * Configurer l'API Google Calendar : Pour activer la synchronisation, l'administrateur de l'application devra ajouter les comptes Google Drive des utilisateurs à la liste des utilisateurs autorisés au niveau de Google Cloud Platforme .
+
+  * Tests dans un environnement local : Lorsqu'un utilisateur teste l'application pour la première fois, il recevra un lien au niveau de termial qui va lui permettre de connecter son compte Google pour cette première utilisation. Par la suite, une fois que le compte est synchronisé, l'utilisateur n'aura plus besoin de réaliser cette action.
+
+
+#### Utilisation
+
+- **Ajouter une Note avec Rappel :** Ajoutez des rappels pour des notes spécifiques avec une date et une heure précises.
+  ```bash
+  sn add "Contenu de la note" --tag "tag" --reminder "YYYY-MM-DD HH:mm"
+
+- **Suppression des rappels pour une Note par Tag :** Supprimez tous les rappels associés à une note spécifique par son tag.
+  ```bash
+  sn delete --reminder --tag "tag"
+
+- **Afficher des rappels pour une Note par Tag :** Afficher tous les rappels associés à une note spécifique par son tag.
+  ```bash
+  sn get --reminder --tag "tag"
+
+## Exportation des notes en texte brut
+
+- Exportation en texte brut : Permettre aux utilisateurs d'exporter leurs notes dans un fichier texte (.txt) pour une compatibilité maximale avec d'autres applications et systèmes.
+
+#### Utilisation
+
+- **Ajout d'une nouvelle commande pour l'exportation en texte brut :** Ajouter une nouvelle option à la commande sn export pour spécifier le format de sortie comme suit :
+  ```bash
+  sn export --text "chemin/vers/fichier.txt"
+
+
+## Utilisation de l'extension SuperNote dans Visual Studio Code
+
+#### Prérequis
+
+Cette fonctionnalité vise à offrir aux utilisateurs la possibilité de gérer leurs notes directement depuis le terminal de Visual Studio Code en utilisant les commandes spécifiques de SuperNote. L'objectif principal de cette intégration est d'améliorer la gestion et l'organisation des informations pendant les sessions de programmation.
+
+#### Utilisation
+
+Pour exécuter l'extension Visual Studio Code :
+
+- **Téléchargez le dossier compressé nommé "Jarunner" qui se trouve dans le fichier SuperNote, ainsi que le fichier `app-all.jar` qui se trouve dans `SuperNotes/app/build/libs`.**
+
+- **Décompressez le dossier compressé et placez le dossier "jarunner" dans le dossier des extensions de votre Visual Studio Code sur votre ordinateur.**
+
+- **Pour utubuntu :**
+
+- Utilisez ubutun utilisez la commande : "sudo cp -r jarunner /shemin ou le fichier extension se trouve " dans mon cas c'était `sudo cp -r jarunner /usr/share/code/resources/app/extensions/`
+
+- **Ouvrez Visual Studio Code et ajoutez le dossier (jarunner) à votre espace de travail.**
+
+- **Dans le dossier SRC, il y a un fichier nommé "extension.ts". Ouvrez ce fichier.**
+
+- **Dans le fichier "extension.ts", il y a une ligne comme suit : const command = `java -jar "${'/Users/Downloads/app-all.jar'}"`**
+
+- **Vous devez remplacer le chemin `/Users/engr/Downloads/app-all.jar` par le chemin du fichier `app-all.jar` sur votre ordinateur.**
+
+- Pour Mac, ladresse utilisera un seul '/' et pour Windows, elle utilisera deux '//'.
+
+- Par exemple, adresse Mac '/Users/engr/Downloads/app-all.jar' et  Windows 'C://Users//engr//Downloads//app-all.jar'
+
+- **Après avoir modifié cette adresse, compilez-le en utilisant ctrl+shift+B (Windows & ubuntu) et cmd+shift+B (Mac).**
+
+- **Après une compilation réussie, redémarrez Visual Studio Code et votre extension sexécutera en utilisant la commande suivante :**
+        - ctrl+alt+J (Windows & Ubuntu)
+        - cmd+alt+J (Mac)
+
+## Affichage des Notes dans le Terminal de SuperNote
+
+Cette fonctionnalité permet à l'utilisateur de SuperNote d'afficher ses notes dans le terminal en utilisant une commande spécifique. L'objectif est de faciliter la visualisation rapide du contenu des notes, de leurs tags associés, ainsi que des horaires de création.
+
+#### Utilisation
+
+- **Une fois les notes sont crées à l'aide des commande :**
+
+`sn add "Contenu de la note"`
+
+`sn add "Contenu de la note" --tag mon_tag`
+
+`sn add "chemin/vers/image.png"`
+
+- **Pour afficher les notes dans le terminal :**
+
+Il faut la commande suivante.
+
+`sn show notes`
+
 
 
 ## Groupe
