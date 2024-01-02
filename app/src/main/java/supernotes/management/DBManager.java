@@ -7,6 +7,10 @@ import java.util.List;
 
 public interface DBManager {
     void createNotesTable();
+    void addTextNote(String title, String content, String tag, String parent_page_id, String page_id);
+    void addTextNote(String title, String type, String content, String tag, String parent_page_id, String page_id, String time);
+    void addImageNote(String title, byte[] imageBytes, String tag, String parent_page_id, String page_id);
+    void addImageNote(String title, String type, byte[] imageBytes, String tag, String parent_page_id, String page_id, String time, String path);
     void createRemindersTable();
     void addReminder(int noteId, LocalDateTime reminderDateTime);
     List<LocalDateTime> getReminders(int noteId);

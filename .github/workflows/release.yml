@@ -1,0 +1,27 @@
+name: Générer PDF depuis AsciiDoc
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v2
+
+      - name: Installation d'outil de génération de PDF depuis AsciiDoc (Asciidoctor, par exemple)
+        run: |
+          gem install asciidoctor-pdf
+
+      - name: Générer le PDF depuis AsciiDoc
+        run: |
+          asciidoctor-pdf app/src/docs/asciidoc/main.adoc -o app/src/docs/asciidoc/main.pdf
+
+      - name: Sauvegarder le PDF généré en tant qu'artefact
+        uses: actions/upload-artifact@v2
+        with:
+          name: generated-pdf
+          path: app/src/docs/asciidoc/main.pdf

@@ -53,4 +53,29 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: ./gradlew build sonar --info
+      
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Ruby and Asciidoctor dependencies
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: 3.0
+
+    - name: Install Asciidoctor gems
+      run: |
+        gem install asciidoctor-pdf
+        gem install rouge
+
+    - name: Generate PDF from Asciidoctor
+      run: |
+        cd app/src/docs/asciidoc/
+        asciidoctor-pdf main.adoc -o main.pdf
+
+    - name: Upload PDF as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: generated-pdf
+        path: app/src/docs/asciidoc/main.pdf
+
 

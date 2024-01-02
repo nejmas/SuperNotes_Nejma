@@ -15,10 +15,9 @@ public interface NoteManager{
     String getPageId(String Content);
     void updateNoteContentInDB(String pageId, String newContent);
     boolean doesNoteExist(String pageId);
+    List<Note> showAllNotes();
     void addReminder(int noteId, LocalDateTime reminderDateTime);
     List<LocalDateTime> getReminders(int noteId);
     boolean deleteRemindersByNoteId(int noteId);
     void addNoteWithReminderToCalendar(String noteContent, String reminderDateTime);
-
-
 }
