@@ -274,6 +274,7 @@ public class SQLiteDBManager implements DBManager {
                         result.add(imageNote);
                     }
             }
+        }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -282,8 +283,7 @@ public class SQLiteDBManager implements DBManager {
     }
 
     @Override
-    public ArrayList<Note> getAllNotesLike(String contentMotif)
-    {
+    public ArrayList<Note> getAllNotesLike(String contentMotif) {
         String sql = "SELECT * FROM notes WHERE content LIKE ?";
 
         var result = new ArrayList<Note>();
