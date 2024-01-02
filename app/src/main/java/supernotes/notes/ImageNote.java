@@ -19,22 +19,10 @@ public class ImageNote implements Note<byte[]> {
     private String time;
     private String path;
 
-
-    public ImageNote(String title, String type, byte[] content, String tag, String pageId, String parentPageId, String time, String path) {
-        this.title = title;
-        this.content = content;
-        this.tag = tag;
-        this.pageId = pageId;
-        this.type = type;
-        this.parentPageId = parentPageId;
-        this.time = time;
-        this.path = path;
-    }
-
     public ImageNote() {
     }
 
-    public ImageNote(String title, byte[] content, String tag, String parentPageId, String pageId) {
+    public ImageNote(String title, byte[] content, String tag, String parentPageId, String pageId, String time, String path) {
         this.title = title;
         this.content = content;
         this.tag = tag;
@@ -43,32 +31,10 @@ public class ImageNote implements Note<byte[]> {
         LocalDateTime dateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
         this.time = dateTime.format(formatter);
-    }
-
-
-    public ImageNote() {}
-
-    public ImageNote(String title, byte[] content, String tag, String pageId, String parentPageId, String time) {
-        this.title = title;
-        this.content = content;
-        this.tag = tag;
-        this.pageId = pageId;
-        this.parentPageId = parentPageId;
-        this.time = time;
-    }
-
-    public ImageNote(String title, String path, byte[] imageBytes, String tag, String parentPageId, String pageId) {
-        this.title = title;
-        this.content = content;
-        this.tag = tag;
-        this.pageId = pageId;
-        this.parentPageId = parentPageId;
         this.time = time;
         this.path = path;
-
-        // this.reminders = new ArrayList<>();
-
     }
+
 
     @Override 
     public int getId() {
