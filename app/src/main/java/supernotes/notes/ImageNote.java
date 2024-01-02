@@ -105,12 +105,10 @@ public class ImageNote implements Note<byte[]> {
         this.time = newTime;
     }
 
-    @Override
     public String getType() {
         return type;
     }
 
-    @Override
     public String getPath() {
         return path;
     }
