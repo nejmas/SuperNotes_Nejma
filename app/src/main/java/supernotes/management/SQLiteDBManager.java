@@ -218,12 +218,11 @@ public class SQLiteDBManager implements DBManager {
                     result.add(new ImageNote(
                             rs.getString("title"),
                             rs.getString("type"),
-                            rs.getBytes("image"),
+                            rs.getString("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
                             rs.getString("page_id"),
-                            rs.getString("time"),
-                            rs.getString("content")));
+                            rs.getString("time")));
                 }
             }
         } catch (SQLException e) {
