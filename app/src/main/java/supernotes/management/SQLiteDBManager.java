@@ -250,24 +250,14 @@ public class SQLiteDBManager implements DBManager {
                     var type = rs.getString("type");
                     int noteId = rs.getInt("id");
 
-                    if (type.equals("text")) {
+                                        if (type.equals("text")) {
                         TextNote textNote = new TextNote(
                             rs.getString("title"),
                             rs.getString("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
                             rs.getString("page_id"),
-                                rs.getString("time")));
-                    }
-                    else if (type.equals("image")){
-                        result.add(new ImageNote(
-                                rs.getString("title"),
-                                rs.getBytes("image"),
-                                rs.getString("tag"),
-                                rs.getString("parent_page_id"),
-                                rs.getString("page_id"),
-                                rs.getString("time")));
-                            rs.getString("page_id")
+                            rs.getString("time")
                         );
                         textNote.setId(noteId);
                         result.add(textNote);
@@ -277,14 +267,13 @@ public class SQLiteDBManager implements DBManager {
                             rs.getBytes("image"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
-                            rs.getString("page_id")
+                            rs.getString("page_id"),
+                            rs.getString("time")
                         );
                         imageNote.setId(noteId);
                         result.add(imageNote);
                     }
-                }
             }
-
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
