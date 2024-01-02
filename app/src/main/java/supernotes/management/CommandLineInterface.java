@@ -2,6 +2,7 @@ package supernotes.management;
 
 import supernotes.fileHandling.FileHandler;
 import supernotes.notes.Note;
+import supernotes.notes.*;
 import supernotes.notes.NoteFactory;
 import supernotes.notionAPI.NotionApiManager;
 import supernotes.notionAPI.NotionManager;
