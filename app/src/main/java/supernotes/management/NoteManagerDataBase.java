@@ -45,8 +45,7 @@ public class NoteManagerDataBase implements NoteManager {
             LocalDateTime dateTime = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
             String time = dateTime.format(formatter);
-            String type = "image";
-            String path = note.getPath();
+            String path = ((ImageNote) note).getPath();
 
             noteId = dbManager.addImageNote(title, imageContent, noteTag, parent_page_id, page_id, time, path);
             note.setId(noteId);
