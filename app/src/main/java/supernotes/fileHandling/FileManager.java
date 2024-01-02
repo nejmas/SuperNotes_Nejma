@@ -4,6 +4,7 @@ import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import supernotes.management.DBManager;
@@ -15,6 +16,7 @@ import supernotes.notes.TextNote;
 import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.util.List;
+import java.io.*;
 
 public class FileManager implements FileHandler {
     public void exportPdfFile(String filePath, String tag) {
