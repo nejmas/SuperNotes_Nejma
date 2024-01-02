@@ -135,7 +135,6 @@ public class CommandLineInterface {
                 noteManager.addNote(note);
                 System.out.println("Page ajoutée à la base de données : ");
             }
-
         } else if (updateNotionPageContentnMatcher.matches()) {
             String newContent = updateNotionPageContentnMatcher.group(1);
             String oldContent = updateNotionPageContentnMatcher.group(2);
@@ -149,7 +148,6 @@ public class CommandLineInterface {
             } else {
                 System.out.println("Page introuvable");
             }
-
         } else if (createNotionPageMatcher.matches()) {
             String content = createNotionPageMatcher.group(1);
 
@@ -175,6 +173,7 @@ public class CommandLineInterface {
                 noteManager.addNote(note);
 
             }
+        }
 
         else if (showAllMatcher.matches()) {
             List<Note> showAllNotes = new ArrayList<>();
@@ -183,32 +182,32 @@ public class CommandLineInterface {
             showAllNotesDesigner(showAllNotes);
         }
         else if (getNoteWithReminderMatcher.matches()) {
-        String tag = getNoteWithReminderMatcher.group(1);
-
-        List<Note> allNotesByTag = noteManager.getByTag(tag);
+            String tag = getNoteWithReminderMatcher.group(1);
     
-        if (!allNotesByTag.isEmpty()) {
-            for (Note note : allNotesByTag) {
-                int noteId = note.getId(); // Récupération de l'ID de la note
-    
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-                List<LocalDateTime> reminders = noteManager.getReminders(noteId);
-    
-                if (!reminders.isEmpty()) {
-                    // Affiche les rappels associés à la note avec le tag spécifique
-                    System.out.println("Rappels pour la note avec l'ID " + noteId + " : " + note.getContent());
-                    for (LocalDateTime reminder : reminders) {
-                        String formattedReminder = reminder.format(formatter);
-                        System.out.println("- " + formattedReminder);
+            List<Note> allNotesByTag = noteManager.getByTag(tag);
+        
+            if (!allNotesByTag.isEmpty()) {
+                for (Note note : allNotesByTag) {
+                    int noteId = note.getId(); // Récupération de l'ID de la note
+        
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                    List<LocalDateTime> reminders = noteManager.getReminders(noteId);
+        
+                    if (!reminders.isEmpty()) {
+                        // Affiche les rappels associés à la note avec le tag spécifique
+                        System.out.println("Rappels pour la note avec l'ID " + noteId + " : " + note.getContent());
+                        for (LocalDateTime reminder : reminders) {
+                            String formattedReminder = reminder.format(formatter);
+                            System.out.println("- " + formattedReminder);
+                        }
+                    } else {
+                        // Aucun rappel trouvé pour cette note
+                        System.out.println("Aucun rappel trouvé pour la note avec l'ID " + noteId + " : " + note.getContent());
                     }
-                } else {
-                    // Aucun rappel trouvé pour cette note
-                    System.out.println("Aucun rappel trouvé pour la note avec l'ID " + noteId + " : " + note.getContent());
                 }
+            } else {
+                System.out.println("Aucune note trouvée avec ce tag.");
             }
-        } else {
-            System.out.println("Aucune note trouvée avec ce tag.");
-        }
     }
     
 
