@@ -388,7 +388,7 @@ public class CommandLineInterface {
 
 // Check if getType() returns null before invoking equals()
             if (n.getType() != null && n.getType().equals("image")) {
-                String path = n.getPath();
+                String path = ((ImageNote) n).getPath();
                 content = path;
             }
             String tag = n.getTag();
