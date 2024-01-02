@@ -123,7 +123,7 @@ public class SQLiteDBManager implements DBManager {
     @Override
     public int addTextNote(String title, String content, String tag, String parent_page_id, String page_id, String time)
     {
-        String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id, time) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO notes (title, content, tag, parent_page_id, page_id, time) VALUES (?, ?, ?, ?, ?, ?)";
         int noteId = -1;
         try (var conn = this.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -153,7 +153,7 @@ public class SQLiteDBManager implements DBManager {
 
     public int addImageNote(String title, byte[] imageBytes, String tag, String parent_page_id, String page_id, String time, String path)
     {
-        String sql = "INSERT INTO notes (title, type, content, tag, parent_page_id, page_id, time, path) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO notes (title, content, tag, parent_page_id, page_id, time, path) VALUES (?, ?, ?, ?, ?, ?, ?)";
         int noteId = -1;
         try (var conn = this.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql);) {
