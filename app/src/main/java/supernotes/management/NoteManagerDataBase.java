@@ -33,13 +33,9 @@ public class NoteManagerDataBase implements NoteManager {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
             String time = dateTime.format(formatter);
 
-            dbManager.addTextNote(title, "text", noteContent, noteTag, parent_page_id, page_id, time);
-        }
-        else if (note instanceof ImageNote){
-    
-            noteId = dbManager.addTextNote(title, noteContent, noteTag, parent_page_id, page_id);
+            noteId = dbManager.addTextNote(title, noteContent, noteTag, parent_page_id, page_id, time);
             note.setId(noteId);
-
+            
         } else if (note instanceof ImageNote) {
             String title = note.getTitle();
             var imageContent = ((ImageNote) note).getContent();
@@ -52,10 +48,7 @@ public class NoteManagerDataBase implements NoteManager {
             String type = "image";
             String path = note.getPath();
 
-            dbManager.addImageNote(title, "image", imageContent, noteTag, parent_page_id, page_id, time, path);
-
-    
-            noteId = dbManager.addImageNote(title, imageContent, noteTag, parent_page_id, page_id);
+            noteId = dbManager.addImageNote(title, imageContent, noteTag, parent_page_id, page_id, time, path);
             note.setId(noteId);
 
         }
