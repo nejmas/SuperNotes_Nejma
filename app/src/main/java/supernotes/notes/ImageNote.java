@@ -22,6 +22,17 @@ public class ImageNote implements Note<byte[]> {
     public ImageNote() {
     }
 
+    public ImageNote(String title, byte[] content, String tag, String parentPageId, String pageId) {
+        this.title = title;
+        this.content = content;
+        this.tag = tag;
+        this.parentPageId = parentPageId;
+        this.pageId = pageId;
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
+        this.time = dateTime.format(formatter);
+    }
+
     public ImageNote(String title, byte[] content, String tag, String parentPageId, String pageId, String time, String path) {
         this.title = title;
         this.content = content;
