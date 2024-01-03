@@ -217,7 +217,7 @@ public class SQLiteDBManager implements DBManager {
                 else if (type.equals("image")){
                     result.add(new ImageNote(
                             rs.getString("title"),
-                            rs.getString("content"),
+                            rs.getBytes("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
                             rs.getString("page_id"),
@@ -264,7 +264,7 @@ public class SQLiteDBManager implements DBManager {
                     } else if (type.equals("image")) {
                         ImageNote imageNote = new ImageNote(
                             rs.getString("title"),
-                            rs.getBytes("image"),
+                            rs.getBytes("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
                             rs.getString("page_id"),
@@ -310,7 +310,7 @@ public class SQLiteDBManager implements DBManager {
                     else if (type.equals("image")){
                         result.add(new ImageNote(
                                 rs.getString("title"),
-                                rs.getBytes("image"),
+                                rs.getBytes("content"),
                                 rs.getString("tag"),
                                 rs.getString("parent_page_id"),
                                 rs.getString("page_id"),
