@@ -221,7 +221,8 @@ public class SQLiteDBManager implements DBManager {
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
                             rs.getString("page_id"),
-                            rs.getString("time")));
+                            rs.getString("time"),
+                            rs.getString("path")));
                 }
             }
         } catch (SQLException e) {
@@ -267,7 +268,8 @@ public class SQLiteDBManager implements DBManager {
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
                             rs.getString("page_id"),
-                            rs.getString("time")
+                            rs.getString("time"),
+                            rs.getString("path")
                         );
                         imageNote.setId(noteId);
                         result.add(imageNote);
@@ -312,7 +314,8 @@ public class SQLiteDBManager implements DBManager {
                                 rs.getString("tag"),
                                 rs.getString("parent_page_id"),
                                 rs.getString("page_id"),
-                                rs.getString("time")));
+                                rs.getString("time"),
+                                rs.getString("path")));
                     }
                 }
             }
