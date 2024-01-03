@@ -9,6 +9,6 @@ public class ImageNoteFactory implements NoteFactory {
 
         byte[] imageBytes = ImageUtils.imageToByteArray(noteContent);
 
-        return new ImageNote(title, noteContent,imageBytes, tag, parentPageId, pageId);
+        return new ImageNote(title, imageBytes, tag, parentPageId, pageId);
     }
 }
