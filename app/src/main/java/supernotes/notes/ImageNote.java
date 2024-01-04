@@ -10,8 +10,7 @@ import java.util.List;
 
 public class ImageNote implements Note<byte[]> {
     private int id;
-    private String title;
-    private String type;
+    private String type = "image";
     private byte[] content;
     private String tag;
     private String pageId;
@@ -19,31 +18,15 @@ public class ImageNote implements Note<byte[]> {
     private String time;
     private String path;
 
-    public ImageNote() {
-    }
-
-    public ImageNote(String title, byte[] content, String tag, String parentPageId, String pageId) {
-        this.title = title;
-        this.content = content;
-        this.tag = tag;
-        this.parentPageId = parentPageId;
-        this.pageId = pageId;
-        LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
-        this.time = dateTime.format(formatter);
-    }
-
-    public ImageNote(String title, byte[] content, String tag, String parentPageId, String pageId, String time, String path) {
-        this.title = title;
-        this.content = content;
-        this.tag = tag;
-        this.parentPageId = parentPageId;
-        this.pageId = pageId;
-        LocalDateTime dateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
-        this.time = dateTime.format(formatter);
-        this.time = time;
+    public ImageNote(String path, byte[] content, String tag, String parentPageId, String pageId) {
         this.path = path;
+        this.content = content;
+        this.tag = tag;
+        this.parentPageId = parentPageId;
+        this.pageId = pageId;
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
+        this.time = dateTime.format(formatter);
     }
 
 
@@ -54,16 +37,6 @@ public class ImageNote implements Note<byte[]> {
     @Override
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     @Override
@@ -112,10 +85,6 @@ public class ImageNote implements Note<byte[]> {
     }
 
     @Override
-    public void setTime(String newTime) {
-        this.time = newTime;
-    }
-
     public String getType() {
         return type;
     }
@@ -123,5 +92,10 @@ public class ImageNote implements Note<byte[]> {
     public String getPath() {
         return path;
     }
+
+    public void setPath() {
+       this.path = path;
+    }
+
 
 }

@@ -8,20 +8,15 @@ import java.util.List;
 
 public class TextNote implements Note<String> {
     private int id;
-    private String title;
-    private String type;
+    private String type = "text";
     private String content;
     private String tag;
     private String ParentPageId;
     private String pageId;
     private String time;
 
-    
-    public TextNote() {
-    }
 
-    public TextNote(String title, String content, String tag, String ParentPageId, String pageId) {
-        this.title = title;
+    public TextNote(String content, String tag, String ParentPageId, String pageId) {
         this.content = content;
         this.tag = tag;
         this.ParentPageId = ParentPageId;
@@ -31,26 +26,6 @@ public class TextNote implements Note<String> {
         this.time = dateTime.format(formatter);
     }
 
-    public TextNote(String title, String content, String tag, String parentPageId, String pageId, String time) {
-        this.title = title;
-        this.content = content;
-        this.tag = tag;
-        ParentPageId = parentPageId;
-        this.pageId = pageId;
-        this.time = time;
-    }
-
-    public TextNote(String title, String type,String content, String tag, String parentPageId, String pageId, String time) {
-        this.title = title;
-        this.content = content;
-        this.tag = tag;
-        ParentPageId = parentPageId;
-        this.pageId = pageId;
-        this.time = time;
-        this.type = type;
-        // this.reminders = new ArrayList<>();
-    }
-
     @Override 
     public int getId() {
         return this.id;
@@ -58,16 +33,6 @@ public class TextNote implements Note<String> {
     @Override
     public void setId(int id) {
         this.id = id;
-    }
-
-    @Override
-    public String getTitle() {
-        return title;
-    }
-
-    @Override
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     @Override
@@ -116,10 +81,6 @@ public class TextNote implements Note<String> {
     }
 
     @Override
-    public void setTime(String newTime) {
-        this.time = time;
-    }
-
     public String getType() {
         return type;
     }
