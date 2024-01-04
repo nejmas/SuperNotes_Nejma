@@ -24,30 +24,24 @@ public class NoteManagerDataBase implements NoteManager {
     public int addNote(Note note) {
         int noteId = -1;
         if (note instanceof TextNote) {
-            String title = note.getTitle();
             String noteContent = ((TextNote) note).getContent();
             String noteTag = note.getTag();
             String parent_page_id = note.getParentPageId();
             String page_id = note.getPageId();
-            LocalDateTime dateTime = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
-            String time = dateTime.format(formatter);
+            String time = note.getTime();
 
-            noteId = dbManager.addTextNote(title, noteContent, noteTag, parent_page_id, page_id, time);
+            noteId = dbManager.addTextNote(noteContent, noteTag, parent_page_id, page_id, time);
             note.setId(noteId);
             
         } else if (note instanceof ImageNote) {
-            String title = note.getTitle();
             var imageContent = ((ImageNote) note).getContent();
             String noteTag = note.getTag();
             String parent_page_id = note.getParentPageId();
             String page_id = note.getPageId();
-            LocalDateTime dateTime = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy h:mm a");
-            String time = dateTime.format(formatter);
             String path = ((ImageNote) note).getPath();
+            String time = note.getTime();
 
-            noteId = dbManager.addImageNote(title, imageContent, noteTag, parent_page_id, page_id, time, path);
+            noteId = dbManager.addImageNote(path, imageContent, noteTag, parent_page_id, page_id, time);
             note.setId(noteId);
 
         }

@@ -92,7 +92,7 @@ public class CommandLineInterface {
             String noteTag = addNoteMatcher.group(2);
 
             NoteFactory noteFactory = isImage(noteContent) ? imageNoteFactory : textNoteFactory;
-            Note note = noteFactory.createNote(null, noteContent, noteTag, null, null);
+            Note note = noteFactory.createNote(noteContent, noteTag, null, null);
 
             noteManager.addNote(note);
             System.out.println("Note ajoutée avec succès !");
@@ -127,12 +127,12 @@ public class CommandLineInterface {
 
             String notionPage = notionApiManager.retrievePageContent(pageId);
             String parentId = notionManager.extractParentPageId(notionPage);
-            String title = notionManager.extractPageTitle(notionPage);
+            String content = notionManager.extractPageTitle(notionPage);
 
             // Vérifiez si la page existe déjà dans la base de données
             if (!noteManager.doesNoteExist(pageId)) {
-                NoteFactory noteFactory = isImage(title) ? imageNoteFactory : textNoteFactory;
-                Note note = noteFactory.createNote(null, title, "notion", parentId, pageId);
+                NoteFactory noteFactory = isImage(content) ? imageNoteFactory : textNoteFactory;
+                Note note = noteFactory.createNote(content, "notion", parentId, pageId);
                 noteManager.addNote(note);
                 System.out.println("Page ajoutée à la base de données : ");
             }
@@ -169,7 +169,7 @@ public class CommandLineInterface {
 
             if (newPage != null && !newPage.isEmpty()) {
                 String newPageId = notionManager.extractNewPageId(newPage);
-                Note note = noteFactory.createNote(null, content, "notion", parentPageId, newPageId);
+                Note note = noteFactory.createNote(content, "notion", parentPageId, newPageId);
                 System.out.println("Note ajoutée avec succès !");
                 noteManager.addNote(note);
 
@@ -224,7 +224,7 @@ public class CommandLineInterface {
 
             // Création d'une nouvelle note
             NoteFactory noteFactory = isImage(noteContent) ? imageNoteFactory : textNoteFactory;
-            Note note = noteFactory.createNote(null, noteContent, noteTag, null, null);
+            Note note = noteFactory.createNote(noteContent, noteTag, null, null);
             int noteId = noteManager.addNote(note);
 
             DateTimeFormatter userDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -306,8 +306,9 @@ public class CommandLineInterface {
         System.out.println("- Pour mettre à jour le contenu d'une page Notion : sn notion update \"Nouveau contenu\" --note \"Ancien contenu\"");
         System.out.println("- Pour créer une nouvelle page Notion : sn notion create \"Contenu de la nouvelle page\"");
         System.out.println("- Pour ajouter une note avec rappel : sn add \"Contenu de la note\" --tag \"Tag de la note\" --reminder \"Date et heure du rappel\"");
-        System.out.println("- Pour Afficher les rappels pour une note par tag : sn get --reminder --tag \"Tag de la note\"");
+        System.out.println("- Pour afficher les rappels pour une note par tag : sn get --reminder --tag \"Tag de la note\"");
         System.out.println("- Pour supprimer les rappels pour une note par tag : sn delete --reminder --tag \"Tag de la note\"");
+        System.out.println("- Pour afficher toutes les notes : sn show notes");
         System.out.println("Pour quitter l'application : exit");
         
         System.out.println("\nExemples :");
@@ -329,7 +330,7 @@ public class CommandLineInterface {
         int tagLength = 18;
         int timeLength = 22;
         for (Note n : notes) {
-            String content = n.getTitle();
+            String content = n.getContent().toString();
             if (content != null && ((content.length()) > noteLength)) {
                 noteLength = content.length();
             }

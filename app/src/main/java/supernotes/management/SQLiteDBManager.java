@@ -27,14 +27,14 @@ public class SQLiteDBManager implements DBManager {
     public void createNotesTable() {
         String sql = "CREATE TABLE IF NOT EXISTS notes (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "title TEXT," +
                 "type TEXT NOT NULL," + // Champ pour indiquer le type de note (texte ou image)
                 "content TEXT," + // Champs pour stocker le contenu texte
                 "image BLOB," + // Champs pour stocker l'image en tant que BLOB
                 "tag TEXT," + // Champs pour stocker le tag texte (ajout de la virgule ici)
                 "parent_page_id TEXT," +
                 "page_id TEXT," + // Champs pour stocker l'ID de la page
-                "time TEXT" +
+                "time TEXT," +
+                "path TEXT" +
                 ")";
     
         try (Statement stmt = connection.createStatement()) {
@@ -121,22 +121,19 @@ public class SQLiteDBManager implements DBManager {
     
     
     @Override
-    public int addTextNote(String title, String content, String tag, String parent_page_id, String page_id, String time)
-    {
-        String sql = "INSERT INTO notes (title, content, tag, parent_page_id, page_id, time) VALUES (?, ?, ?, ?, ?, ?)";
+    public int addTextNote(String content, String tag, String parent_page_id, String page_id, String time) {
+        String sql = "INSERT INTO notes (type, content, tag, parent_page_id, page_id, time) VALUES (?, ?, ?, ?, ?, ?)";
         int noteId = -1;
+    
         try (var conn = this.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, title);
-            pstmt.setString(2, "text");
-            pstmt.setString(3, content);            
-            pstmt.setString(4, tag);
-            pstmt.setString(5, parent_page_id);
-            pstmt.setString(6, page_id);
-            pstmt.setString(7,time);
-            pstmt.executeUpdate();
-
-
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, "text");
+            pstmt.setString(2, content);
+            pstmt.setString(3, tag);
+            pstmt.setString(4, parent_page_id);
+            pstmt.setString(5, page_id);
+            pstmt.setString(6, time);
+    
             int rowsInserted = pstmt.executeUpdate();
             if (rowsInserted > 0) {
                 ResultSet generatedKeys = pstmt.getGeneratedKeys();
@@ -144,27 +141,27 @@ public class SQLiteDBManager implements DBManager {
                     noteId = generatedKeys.getInt(1); // Récupérer l'ID généré
                 }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    
         return noteId;
     }
-
-    public int addImageNote(String title, byte[] imageBytes, String tag, String parent_page_id, String page_id, String time, String path)
-    {
-        String sql = "INSERT INTO notes (title, content, tag, parent_page_id, page_id, time, path) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    
+    public int addImageNote(String path, byte[] imageBytes, String tag, String parent_page_id, String page_id, String time) {
+        String sql = "INSERT INTO notes (type, path, content, tag, parent_page_id, page_id, time) VALUES (?, ?, ?, ?, ?, ?, ?)";
         int noteId = -1;
+    
         try (var conn = this.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql);) {
-            pstmt.setString(1, title);
-            pstmt.setString(2, "image");
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, "image");
+            pstmt.setString(2, path);
             pstmt.setBytes(3, imageBytes);
             pstmt.setString(4, tag);
             pstmt.setString(5, parent_page_id);
             pstmt.setString(6, page_id);
-            pstmt.setString(7,time);
-            pstmt.setString(8,path);
+            pstmt.setString(7, time);
+    
             int rowsInserted = pstmt.executeUpdate();
             if (rowsInserted > 0) {
                 ResultSet generatedKeys = pstmt.getGeneratedKeys();
@@ -175,8 +172,10 @@ public class SQLiteDBManager implements DBManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    
         return noteId;
     }
+    
 
     @Override
     public void deleteNoteByTag(String tag)
@@ -207,22 +206,20 @@ public class SQLiteDBManager implements DBManager {
                 var type = rs.getString("type");
                 if (type.equals("text")){
                     result.add(new TextNote(
-                            rs.getString("title"),
                             rs.getString("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
-                            rs.getString("page_id"),
-                            rs.getString("time")));
+                            rs.getString("page_id")
+                            ));
                 }
                 else if (type.equals("image")){
                     result.add(new ImageNote(
-                            rs.getString("title"),
+                            rs.getString("path"),
                             rs.getBytes("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
-                            rs.getString("page_id"),
-                            rs.getString("time"),
-                            rs.getString("path")));
+                            rs.getString("page_id")
+                            ));
                 }
             }
         } catch (SQLException e) {
@@ -252,24 +249,20 @@ public class SQLiteDBManager implements DBManager {
 
                                         if (type.equals("text")) {
                         TextNote textNote = new TextNote(
-                            rs.getString("title"),
                             rs.getString("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
-                            rs.getString("page_id"),
-                            rs.getString("time")
+                            rs.getString("page_id")
                         );
                         textNote.setId(noteId);
                         result.add(textNote);
                     } else if (type.equals("image")) {
                         ImageNote imageNote = new ImageNote(
-                            rs.getString("title"),
+                            rs.getString("path"),
                             rs.getBytes("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
-                            rs.getString("page_id"),
-                            rs.getString("time"),
-                            rs.getString("path")
+                            rs.getString("page_id")
                         );
                         imageNote.setId(noteId);
                         result.add(imageNote);
@@ -300,22 +293,20 @@ public class SQLiteDBManager implements DBManager {
                     var type = rs.getString("type");
                     if (type.equals("text")){
                         result.add(new TextNote(
-                            rs.getString("title"),
                             rs.getString("content"),
                             rs.getString("tag"),
                             rs.getString("parent_page_id"),
-                            rs.getString("page_id"),
-                                rs.getString("time")));
+                            rs.getString("page_id")
+                                ));
                     }
                     else if (type.equals("image")){
                         result.add(new ImageNote(
-                                rs.getString("title"),
+                                rs.getString("path"),
                                 rs.getBytes("content"),
                                 rs.getString("tag"),
                                 rs.getString("parent_page_id"),
-                                rs.getString("page_id"),
-                                rs.getString("time"),
-                                rs.getString("path")));
+                                rs.getString("page_id")
+                                ));
                     }
                 }
             }
