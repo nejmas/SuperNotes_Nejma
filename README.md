@@ -277,9 +277,9 @@ Cette fonctionnalité vise à offrir aux utilisateurs la possibilité de gérer 
 
 Pour exécuter l'extension Visual Studio Code :
 
-- **Téléchargez le dossier compressé nommé "Jarunner" qui se trouve dans le fichier SuperNote, ainsi que le fichier `app-all.jar` qui se trouve dans `SuperNotes/app/build/libs`.**
+- **Téléchargez le dossier compressé nommé "Jarunner" qui se trouve dans le repertoire SuperNote, ainsi que le fichier `app-all.jar` qui se trouve dans `SuperNotes/app/build/libs`.**
 
-- **Décompressez le dossier compressé et placez le dossier "jarunner" dans le dossier des extensions de votre Visual Studio Code sur votre ordinateur.**
+- **Décompressez le dossier compressé "Jarunner" et placez le dans le dossier des extensions de votre Visual Studio Code sur votre ordinateur.**
 
 - **Pour utubuntu :**
 
@@ -287,7 +287,7 @@ Pour exécuter l'extension Visual Studio Code :
 
 - **Ouvrez Visual Studio Code et ajoutez le dossier (jarunner) à votre espace de travail.**
 
-- **Dans le dossier SRC, il y a un fichier nommé "extension.ts". Ouvrez ce fichier.**
+- **Dans le dossier src, il y a un fichier nommé "extension.ts". Ouvrez ce fichier.**
 
 - **Dans le fichier "extension.ts", il y a une ligne comme suit : const command = `java -jar "${'/Users/Downloads/app-all.jar'}"`**
 
