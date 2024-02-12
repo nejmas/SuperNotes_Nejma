@@ -1,26 +1,23 @@
 package supernotes.management;
 
+import com.google.api.client.util.DateTime;
 import supernotes.fileHandling.FileHandler;
+import supernotes.notes.ImageNote;
 import supernotes.notes.Note;
-import supernotes.notes.*;
 import supernotes.notes.NoteFactory;
 import supernotes.notionAPI.NotionApiManager;
 import supernotes.notionAPI.NotionManager;
-import java.util.ArrayList;
-import supernotes.reminders.GoogleCalendarReminder;
-import java.security.GeneralSecurityException;
+
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.google.api.client.util.DateTime;
 
 public class CommandLineInterface {
     private final NoteFactory textNoteFactory;
@@ -39,8 +36,8 @@ public class CommandLineInterface {
         this.notionManager = notionManager;
     }
 
-    public void parseCommand(String command) {
-        Pattern addNotePattern = Pattern.compile("sn add \"([^\"]*)\"(?: --tag \"([^\"]*)\")?");
+    public void parseCommand(String command) throws SQLException {
+        Pattern addNotePattern = Pattern.compile("sn add \"([^\"]*)\"(?: --tag ([^\"]*(?:\"[^\"]*\"[^\"]*)*)?)?");
         Matcher addNoteMatcher = addNotePattern.matcher(command);
 
         Pattern exportPDFPattern = Pattern.compile("^sn export --all \"(.*)\"$");
@@ -67,11 +64,8 @@ public class CommandLineInterface {
         Pattern helpPattern = Pattern.compile("sn --help");
         Matcher helpMatcher = helpPattern.matcher(command);
 
-
         Pattern showAllPattern = Pattern.compile("sn show notes");
         Matcher showAllMatcher = showAllPattern.matcher(command);
-
-
 
         Pattern addNoteWithReminderPattern = Pattern.compile("sn add \"([^\"]*)\"(?: --tag \"([^\"]*)\")? --reminder \"([^\"]*)\"");
         Matcher addNoteWithReminderMatcher = addNoteWithReminderPattern.matcher(command);
@@ -84,8 +78,21 @@ public class CommandLineInterface {
 
         Pattern exportTXTPattern = Pattern.compile("sn export --text \"(.*)\"$");
         Matcher exportTXTMatcher = exportTXTPattern.matcher(command);
-        
-        
+
+        Pattern linkNotesPatternWithOR = Pattern.compile("sn link --id \"([^\"]+)\" --tag \"([^\"]+)\"(?: +or +\"([^\"]+)\")?(?:\\s+--name \"([^\"]+)\")?");
+        Matcher linkNotesMatcherWithOR = linkNotesPatternWithOR.matcher(command);
+
+        Pattern linkNotesPatternWithAND = Pattern.compile("sn link --id \"([^\"]+)\" --tag \"([^\"]+)\" and \"([^\"]+)\" --name \"([^\"]+)\"");
+        Matcher linkNotesMatcherWithAND = linkNotesPatternWithAND.matcher(command);
+
+        Pattern linkNotesPatternWithANDAndAt = Pattern.compile("sn link --id \"([^\"]+)\" --tag \"([^\"]+)\" and \"([^\"]+)\" --name \"([^\"]+)\" --at \"([^\"]+)\"");
+        Matcher linkNotesMatcherWithANDAndAt = linkNotesPatternWithANDAndAt.matcher(command);
+
+        Pattern linkNotesPatternWithANDAndBefore = Pattern.compile("sn link --id \"([^\"]+)\" --tag \"([^\"]+)\" and \"([^\"]+)\" --name \"([^\"]+)\" --before \"([^\"]+)\"");
+        Matcher linkNotesMatcherWithANDAndBefore = linkNotesPatternWithANDAndBefore.matcher(command);
+
+        Pattern linkNotesPatternWithANDAndAfter = Pattern.compile("sn link --id \"([^\"]+)\" --tag \"([^\"]+)\" and \"([^\"]+)\" --name \"([^\"]+)\" --after \"([^\"]+)\"");
+        Matcher linkNotesMatcherWithANDAndAfter = linkNotesPatternWithANDAndAfter.matcher(command);
 
         if (addNoteMatcher.matches()) {
             String noteContent = addNoteMatcher.group(1);
@@ -94,8 +101,8 @@ public class CommandLineInterface {
             NoteFactory noteFactory = isImage(noteContent) ? imageNoteFactory : textNoteFactory;
             Note note = noteFactory.createNote(noteContent, noteTag, null, null);
 
-            noteManager.addNote(note);
-            System.out.println("Note ajoutée avec succès !");
+            int id = noteManager.addNote(note);
+            System.out.println("Note ajoutée avec succès avec l'identifiant : " + id);
         } else if (deleteNotesMatcher.matches()) {
             String noteTag = deleteNotesMatcher.group(1);
 
@@ -174,26 +181,23 @@ public class CommandLineInterface {
                 noteManager.addNote(note);
 
             }
-        }
-
-        else if (showAllMatcher.matches()) {
+        } else if (showAllMatcher.matches()) {
             List<Note> showAllNotes = new ArrayList<>();
             showAllNotes = noteManager.showAllNotes();
             System.out.println("Notes :- \n\n\n");
             showAllNotesDesigner(showAllNotes);
-        }
-        else if (getNoteWithReminderMatcher.matches()) {
+        } else if (getNoteWithReminderMatcher.matches()) {
             String tag = getNoteWithReminderMatcher.group(1);
-    
+
             List<Note> allNotesByTag = noteManager.getByTag(tag);
-        
+
             if (!allNotesByTag.isEmpty()) {
                 for (Note note : allNotesByTag) {
                     int noteId = note.getId(); // Récupération de l'ID de la note
-        
+
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
                     List<LocalDateTime> reminders = noteManager.getReminders(noteId);
-        
+
                     if (!reminders.isEmpty()) {
                         // Affiche les rappels associés à la note avec le tag spécifique
                         System.out.println("Rappels pour la note avec l'ID " + noteId + " : " + note.getContent());
@@ -209,81 +213,164 @@ public class CommandLineInterface {
             } else {
                 System.out.println("Aucune note trouvée avec ce tag.");
             }
-    }
-    
+        } else if (helpMatcher.matches()) {
+            displayHelp();
+        } else if (addNoteWithReminderMatcher.matches()) {
+            try {
+                String noteContent = addNoteWithReminderMatcher.group(1);
+                String noteTag = addNoteWithReminderMatcher.group(2);
+                String reminder = addNoteWithReminderMatcher.group(3);
 
-    else if (helpMatcher.matches()){
-        displayHelp();
-    }
+                // Création d'une nouvelle note
+                NoteFactory noteFactory = isImage(noteContent) ? imageNoteFactory : textNoteFactory;
+                Note note = noteFactory.createNote(noteContent, noteTag, null, null);
+                int noteId = noteManager.addNote(note);
 
-    else if (addNoteWithReminderMatcher.matches()) {
-        try {
-            String noteContent = addNoteWithReminderMatcher.group(1);
-            String noteTag = addNoteWithReminderMatcher.group(2);
-            String reminder = addNoteWithReminderMatcher.group(3);
+                DateTimeFormatter userDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                LocalDateTime reminderDateTime = LocalDateTime.parse(reminder, userDateTimeFormatter);
 
-            // Création d'une nouvelle note
-            NoteFactory noteFactory = isImage(noteContent) ? imageNoteFactory : textNoteFactory;
-            Note note = noteFactory.createNote(noteContent, noteTag, null, null);
-            int noteId = noteManager.addNote(note);
+                noteManager.addReminder(noteId, reminderDateTime);
 
-            DateTimeFormatter userDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            LocalDateTime reminderDateTime = LocalDateTime.parse(reminder, userDateTimeFormatter);
-            
-            noteManager.addReminder(noteId, reminderDateTime);
+                // Formatter pour le format attendu par Google Calendar
+                DateTimeFormatter googleCalendarDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-            // Formatter pour le format attendu par Google Calendar
-            DateTimeFormatter googleCalendarDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    
-            // Conversion de la date saisie par l'utilisateur au format LocalDateTime
-            LocalDateTime localDateTime = LocalDateTime.parse(reminder, userDateTimeFormatter);
-            String formattedDate = localDateTime.atOffset(ZoneOffset.UTC).format(googleCalendarDateTimeFormatter);
+                // Conversion de la date saisie par l'utilisateur au format LocalDateTime
+                LocalDateTime localDateTime = LocalDateTime.parse(reminder, userDateTimeFormatter);
+                String formattedDate = localDateTime.atOffset(ZoneOffset.UTC).format(googleCalendarDateTimeFormatter);
 
-            DateTime startDateTime = new DateTime(formattedDate);
+                DateTime startDateTime = new DateTime(formattedDate);
 
-            noteManager.addNoteWithReminderToCalendar(noteContent, startDateTime.toString());
-        
-            System.out.println("Note avec rappel ajoutée avec succès !");
-        } catch (DateTimeParseException e) {
-            System.out.println("Format de date/heure invalide. Utilisez le format 'yyyy-MM-dd HH:mm'.");
-        }
-    }
+                noteManager.addNoteWithReminderToCalendar(noteContent, startDateTime.toString());
 
-    else if (deleteReminderForNoteMatcher.matches()) {
-        String tag = deleteReminderForNoteMatcher.group(1);
+                System.out.println("Note avec rappel ajoutée avec succès !");
+            } catch (DateTimeParseException e) {
+                System.out.println("Format de date/heure invalide. Utilisez le format 'yyyy-MM-dd HH:mm'.");
+            }
+        } else if (deleteReminderForNoteMatcher.matches()) {
+            String tag = deleteReminderForNoteMatcher.group(1);
 
-        List<Note> allNotesByTag = noteManager.getByTag(tag);
-    
-        if (!allNotesByTag.isEmpty()) {
-            boolean anyReminderDeleted = false;
-            for (Note note : allNotesByTag) {
-                int noteId = note.getId(); // Récupération de l'ID de la note
-                boolean reminderDeleted = noteManager.deleteRemindersByNoteId(noteId);
-                if (!reminderDeleted) {
-                    anyReminderDeleted = true;
-                } else {
-                    // Aucun rappel trouvé pour cette note
-                    System.out.println("Aucun rappel trouvé pour la note avec le tag '" + tag + "' : " + note.getContent());
+            List<Note> allNotesByTag = noteManager.getByTag(tag);
+
+            if (!allNotesByTag.isEmpty()) {
+                boolean anyReminderDeleted = false;
+                for (Note note : allNotesByTag) {
+                    int noteId = note.getId(); // Récupération de l'ID de la note
+                    boolean reminderDeleted = noteManager.deleteRemindersByNoteId(noteId);
+                    if (!reminderDeleted) {
+                        anyReminderDeleted = true;
+                    } else {
+                        // Aucun rappel trouvé pour cette note
+                        System.out.println("Aucun rappel trouvé pour la note avec le tag '" + tag + "' : " + note.getContent());
+                    }
                 }
+                if (anyReminderDeleted) {
+                    System.out.println("Rappels pour les notes avec le tag '" + tag + "' ont été supprimés avec succès !");
+                }
+            } else {
+                System.out.println("Aucune note trouvée avec ce tag.");
             }
-            if (anyReminderDeleted) {
-                System.out.println("Rappels pour les notes avec le tag '" + tag + "' ont été supprimés avec succès !");
+        } else if (exportTXTMatcher.matches()) {
+            String filePath = exportTXTMatcher.group(1);
+
+            fileHandler.exportToText(filePath);
+            System.out.println("notes exporter avec succès !");
+
+        } else if (linkNotesMatcherWithANDAndAt.find()) {
+            int noteId = Integer.parseInt(linkNotesMatcherWithANDAndAt.group(1));
+            String[] tags;
+
+            if (linkNotesMatcherWithANDAndAt.group(3) != null) {
+                tags = new String[]{linkNotesMatcherWithANDAndAt.group(2), linkNotesMatcherWithANDAndAt.group(3)};
+            } else {
+                tags = new String[]{linkNotesMatcherWithANDAndAt.group(2)};
             }
-        } else {
-            System.out.println("Aucune note trouvée avec ce tag.");
-        }
-    }
 
+            String linkName = linkNotesMatcherWithANDAndAt.group(4);
+            String date = linkNotesMatcherWithANDAndAt.group(5);
+            // Assuming noteManager.linkNotes returns an int
+            int linkId = noteManager.linkNotesWithANDAtDate(noteId, tags, linkName, date);
+            if (linkId == -1) {
+                System.out.println("Erreur!");
+            } else {
+                System.out.println("Notes liées avec succès.");
+            }
+        } else if (linkNotesMatcherWithANDAndBefore.find()) {
+            int noteId = Integer.parseInt(linkNotesMatcherWithANDAndBefore.group(1));
+            String[] tags;
 
-    else if (exportTXTMatcher.matches()) {
-        String filePath = exportTXTMatcher.group(1);
+            if (linkNotesMatcherWithANDAndBefore.group(3) != null) {
+                tags = new String[]{linkNotesMatcherWithANDAndBefore.group(2), linkNotesMatcherWithANDAndBefore.group(3)};
+            } else {
+                tags = new String[]{linkNotesMatcherWithANDAndBefore.group(2)};
+            }
 
-        fileHandler.exportToText(filePath);
-        System.out.println("notes exporter avec succès !");
+            String linkName = linkNotesMatcherWithANDAndBefore.group(4);
+            String date = linkNotesMatcherWithANDAndBefore.group(5);
+            // Assuming noteManager.linkNotes returns an int
+            int linkId = noteManager.linkNotesWithANDBeforeDate(noteId, tags, linkName, date);
+            if (linkId == -1) {
+                System.out.println("Erreur!");
+            } else {
+                System.out.println("Notes liées avec succès.");
+            }
+        } else if (linkNotesMatcherWithANDAndAfter.find()) {
+            int noteId = Integer.parseInt(linkNotesMatcherWithANDAndAfter.group(1));
+            String[] tags;
 
-    }
+            if (linkNotesMatcherWithANDAndAfter.group(3) != null) {
+                tags = new String[]{linkNotesMatcherWithANDAndAfter.group(2), linkNotesMatcherWithANDAndAfter.group(3)};
+            } else {
+                tags = new String[]{linkNotesMatcherWithANDAndAfter.group(2)};
+            }
 
-    else if(!command.equals("exit")) {
+            String linkName = linkNotesMatcherWithANDAndAfter.group(4);
+            String date = linkNotesMatcherWithANDAndAfter.group(5);
+            // Assuming noteManager.linkNotes returns an int
+            int linkId = noteManager.linkNotesWithANDAfterDate(noteId, tags, linkName, date);
+            if (linkId == -1) {
+                System.out.println("Erreur!");
+            } else {
+                System.out.println("Notes liées avec succès.");
+            }
+        } else if (linkNotesMatcherWithAND.matches()) {
+            int noteId = Integer.parseInt(linkNotesMatcherWithAND.group(1));
+            String[] tags;
+
+            if (linkNotesMatcherWithAND.group(3) != null) {
+                tags = new String[]{linkNotesMatcherWithAND.group(2), linkNotesMatcherWithAND.group(3)};
+            } else {
+                tags = new String[]{linkNotesMatcherWithAND.group(2)};
+            }
+
+            String linkName = linkNotesMatcherWithAND.group(4);
+
+            // Assuming noteManager.linkNotes returns an int
+            int linkId = noteManager.linkNotesWithAND(noteId, tags, linkName);
+            if (linkId == -1) {
+                System.out.println("Erreur!");
+            } else {
+                System.out.println("Notes liées avec succès. Link ID: " + linkId);
+            }
+        } else if (linkNotesMatcherWithOR.matches()) {
+            int noteId = Integer.parseInt(linkNotesMatcherWithOR.group(1));
+            String[] tags;
+
+            if (linkNotesMatcherWithOR.group(3) != null) {
+                tags = new String[]{linkNotesMatcherWithOR.group(2), linkNotesMatcherWithOR.group(3)};
+            } else {
+                tags = new String[]{linkNotesMatcherWithOR.group(2)};
+            }
+
+            String linkName = linkNotesMatcherWithOR.group(4);
+
+            // Assuming noteManager.linkNotes returns an int
+            int linkId = noteManager.linkNotesWithOR(noteId, tags, linkName);
+            if (linkId == -1) {
+                System.out.println("Erreur!");
+            } else {
+                System.out.println("Notes liées avec succès. Link ID: " + linkId);
+            }
+        } else if (!command.equals("exit")) {
             System.out.println("Commande invalide. Tapez 'sn --help' pour afficher l'aide.");
         }
     }
@@ -310,7 +397,7 @@ public class CommandLineInterface {
         System.out.println("- Pour supprimer les rappels pour une note par tag : sn delete --reminder --tag \"Tag de la note\"");
         System.out.println("- Pour afficher toutes les notes : sn show notes");
         System.out.println("Pour quitter l'application : exit");
-        
+
         System.out.println("\nExemples :");
         System.out.println("- sn add \"Acheter du lait\" --tag \"Courses\"");
         System.out.println("- sn export --all \"C:\\Users\\Utilisateur\\Desktop\\notes.pdf\"");
@@ -321,7 +408,7 @@ public class CommandLineInterface {
         System.out.println("- sn add \"Rendez-vous chez le dentiste\" --tag \"Rendez-vous\" --reminder \"2023-12-31 09:00\"");
         System.out.println("- sn delete --reminder --tag \"Rendez-vous\"");
     }
-    
+
 
     public void showAllNotesDesigner(List<Note> notes) {
         String boldText = "\u001B[1m";

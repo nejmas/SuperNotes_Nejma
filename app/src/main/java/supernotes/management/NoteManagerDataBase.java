@@ -1,5 +1,6 @@
 package supernotes.management;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +9,6 @@ import supernotes.notes.ImageNote;
 import supernotes.notes.Note;
 import supernotes.notes.TextNote;
 import supernotes.reminders.GoogleCalendarReminder;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class NoteManagerDataBase implements NoteManager {
     DBManager dbManager;
@@ -108,6 +105,31 @@ public class NoteManagerDataBase implements NoteManager {
     @Override
     public void addNoteWithReminderToCalendar(String noteContent, String reminderDateTime) {
         GoogleCalendarReminder.addEventToCalendar(noteContent, reminderDateTime);
+    }
+
+    @Override
+    public int linkNotesWithOR(int noteId, String[] tags, String linkName) throws SQLException {
+        return dbManager.linkNotesWithOR(noteId,tags,linkName);
+    }
+
+    @Override
+    public int linkNotesWithAND(int noteId, String[] tags, String linkName) throws SQLException {
+        return dbManager.linkNotesWithAND(noteId,tags,linkName);
+    }
+
+    @Override
+    public int linkNotesWithANDAtDate(int noteId, String[] tags, String linkName, String date) throws SQLException {
+        return dbManager.linkNotesWithANDAtDate(noteId,tags,linkName,date);
+    }
+
+    @Override
+    public int linkNotesWithANDBeforeDate(int noteId, String[] tags, String linkName, String date) throws SQLException {
+        return dbManager.linkNotesWithANDBeforeDate(noteId,tags,linkName,date);
+    }
+
+    @Override
+    public int linkNotesWithANDAfterDate(int noteId, String[] tags, String linkName, String date) {
+        return dbManager.linkNotesWithANDAfterDate(noteId,tags,linkName,date);
     }
 
 }
