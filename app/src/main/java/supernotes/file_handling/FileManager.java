@@ -1,10 +1,9 @@
-package supernotes.fileHandling;
+package supernotes.file_handling;
 
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
-import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import supernotes.management.DBManager;
@@ -13,8 +12,6 @@ import supernotes.notes.ImageNote;
 import supernotes.notes.Note;
 import supernotes.notes.TextNote;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileOutputStream;
 import java.util.List;
 import java.io.*;
 
@@ -55,10 +52,9 @@ public class FileManager implements FileHandler {
     }
 
     private void exportPdf(String filePath, List<Note> result) {
-        try {
-            PdfWriter writer = new PdfWriter(new FileOutputStream(filePath));
-            PdfDocument pdf = new PdfDocument(writer);
-            Document document = new Document(pdf);
+        try (PdfWriter writer = new PdfWriter(new FileOutputStream(filePath));
+        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document(pdf)){
 
             var notesIterator = result.iterator();
             while (notesIterator.hasNext()) {
@@ -76,18 +72,14 @@ public class FileManager implements FileHandler {
                     }
                 }
 
-                // Add a new paragraph only if there are more notes
                 if (notesIterator.hasNext()) {
                     document.add(new Paragraph("\n"));
                 }
             }
 
-            document.close();
-            pdf.close();
-
             System.out.println("Exportation terminée : " + filePath);
 
-            boolean isUploaded = DriveQuickstart.uploadFile(filePath, result);
+            boolean isUploaded = DriveApiManager.uploadFile(filePath);
 
             if (isUploaded) {
                 System.out.println("Fichier téléchargé sur Google Drive");
@@ -100,23 +92,19 @@ public class FileManager implements FileHandler {
     }
 
     public void exportToText(String filePath) {
-    try {
-        FileWriter writer = new FileWriter(filePath);
-
-        DBManager dbManager = new SQLiteDBManager();
-        List<Note> notes = dbManager.getAllNotes();
-
-        for (Note note : notes) {
-            writer.write("Tag: " + note.getTag() + "\n");
-            writer.write("Content: " + note.getContent() + "\n\n");
+        try (FileWriter writer = new FileWriter(filePath)) {
+            DBManager dbManager = new SQLiteDBManager();
+            List<Note> notes = dbManager.getAllNotes();
+            for (Note note : notes) {
+                writer.write("Tag: " + note.getTag() + "\n");
+                writer.write("Content: " + note.getContent() + "\n\n");
+            }
+            System.out.println("Exportation des notes en texte brut terminée : " + filePath);
+        } catch (IOException e) {
+            System.out.println("Erreur lors de l'exportation en texte brut : " + e.getMessage());
         }
-
-        writer.close();
-        System.out.println("Exportation des notes en texte brut terminée : " + filePath);
-    } catch (IOException e) {
-        System.out.println("Erreur lors de l'exportation en texte brut : " + e.getMessage());
     }
-}
+
 
 }
 

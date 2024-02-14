@@ -1,6 +1,6 @@
 package supernotes;
 
-import supernotes.fileHandling.*;
+import supernotes.file_handling.*;
 import supernotes.management.*;
 import supernotes.notes.*;
 import supernotes.notionAPI.NotionAPI;

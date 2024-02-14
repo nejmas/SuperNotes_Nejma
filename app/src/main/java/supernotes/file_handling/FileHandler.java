@@ -1,8 +1,4 @@
-package supernotes.fileHandling;
-
-import java.util.List;
-
-import supernotes.notes.Note;
+package supernotes.file_handling;
 
 public interface FileHandler {
     void exportPdfFile(String filePath, String tag);

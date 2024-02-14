@@ -2,8 +2,7 @@ package supernotes.notes;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 public class TextNote implements Note<String> {

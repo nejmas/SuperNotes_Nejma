@@ -23,22 +23,22 @@ public class NoteManagerDataBase implements NoteManager {
         if (note instanceof TextNote) {
             String noteContent = ((TextNote) note).getContent();
             String noteTag = note.getTag();
-            String parent_page_id = note.getParentPageId();
-            String page_id = note.getPageId();
+            String parentPageId = note.getParentPageId();
+            String pageId = note.getPageId();
             String time = note.getTime();
 
-            noteId = dbManager.addTextNote(noteContent, noteTag, parent_page_id, page_id, time);
+            noteId = dbManager.addTextNote(noteContent, noteTag, parentPageId, pageId, time);
             note.setId(noteId);
             
         } else if (note instanceof ImageNote) {
             var imageContent = ((ImageNote) note).getContent();
             String noteTag = note.getTag();
-            String parent_page_id = note.getParentPageId();
-            String page_id = note.getPageId();
+            String parentPageId = note.getParentPageId();
+            String pageId = note.getPageId();
             String path = ((ImageNote) note).getPath();
             String time = note.getTime();
 
-            noteId = dbManager.addImageNote(path, imageContent, noteTag, parent_page_id, page_id, time);
+            noteId = dbManager.addImageNote(path, imageContent, noteTag, parentPageId, pageId, time);
             note.setId(noteId);
 
         }
@@ -62,6 +62,11 @@ public class NoteManagerDataBase implements NoteManager {
         dbManager.deleteNoteByTag(tag);
     }
 
+    @Override
+    public void deleteNoteByNoteId(int noteId)
+    {
+        dbManager.deleteNoteByNoteId(noteId);
+    }
 
     @Override
     public ArrayList<Note> getByTag(String tag)
@@ -76,9 +81,9 @@ public class NoteManagerDataBase implements NoteManager {
     }
 
     @Override
-    public String getPageId(String Content)
+    public String getPageId(String content)
     {
-        return dbManager.getPageId(Content);
+        return dbManager.getPageId(content);
     }
     
     @Override

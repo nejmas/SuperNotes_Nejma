@@ -11,8 +11,9 @@ public interface NoteManager{
     int addNote(Note note);
     ArrayList<Note> getByTag(String tag);
     void deleteByTag(String tag);
+    void deleteNoteByNoteId(int noteId);
     String getParentPageId();
-    String getPageId(String Content);
+    String getPageId(String content);
     void updateNoteContentInDB(String pageId, String newContent);
     boolean doesNoteExist(String pageId);
     List<Note> showAllNotes();
