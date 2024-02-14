@@ -280,6 +280,9 @@ Pour exécuter l'extension Visual Studio Code :
         - ctrl+alt+J (Windows & Ubuntu)
         - cmd+alt+J (Mac)
 
+## Documentation
+[Lien vers la documentation](https://github.com/dounyaa/SuperNotes/blob/main/app/src/docs/asciidoc/main.adoc)
+
 
 ## Groupe
 
