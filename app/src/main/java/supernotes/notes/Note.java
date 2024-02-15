@@ -17,6 +17,7 @@ public interface Note<T> {
     void setParentPageId(String pageId);
 
     String getTime();
+    void setTime(String time);
 
     String getType();
 }

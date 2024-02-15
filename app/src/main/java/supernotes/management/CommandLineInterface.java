@@ -98,6 +98,9 @@ public class CommandLineInterface {
         if (parseLinkNotesWithANDAndAfterCommand(command)) {
             return;
         }
+        if (parseShowAllLinksByNameCommand(command)) {
+            return;
+        }
 
         handleInvalidCommand();
     }
@@ -580,6 +583,23 @@ public class CommandLineInterface {
                 System.out.println("Notes liées avec succès.");
             }
             return true;
+        }
+
+        return false;
+    }
+
+    private boolean parseShowAllLinksByNameCommand(String command) {
+        Pattern showAllLinksByNamePattern = Pattern.compile("sn show --link\\s+\"([^\"]+)\"");
+        Matcher showAllLinksByNameMatcher = showAllLinksByNamePattern.matcher(command);
+
+        if (showAllLinksByNameMatcher.matches()) {
+            String linkName = showAllLinksByNameMatcher.group(1);
+            boolean linkExistenceCheck = noteManager.getAllLinksByName(linkName);
+            if (!linkExistenceCheck) {
+                System.out.println("No Links found with Link Name : " + linkName);
+
+            return true;
+            }
         }
 
         return false;
