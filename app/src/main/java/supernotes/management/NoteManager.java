@@ -11,8 +11,9 @@ public interface NoteManager{
     int addNote(Note note);
     ArrayList<Note> getByTag(String tag);
     void deleteByTag(String tag);
+    void deleteNoteByNoteId(int noteId);
     String getParentPageId();
-    String getPageId(String Content);
+    String getPageId(String content);
     void updateNoteContentInDB(String pageId, String newContent);
     boolean doesNoteExist(String pageId);
     List<Note> showAllNotes();
@@ -28,4 +29,5 @@ public interface NoteManager{
     int linkNotesWithANDBeforeDate(int noteId, String[] tags, String linkName, String date) throws SQLException;
 
     int linkNotesWithANDAfterDate(int noteId, String[] tags, String linkName, String date);
+    boolean getAllLinksByName(String linkName);
 }

@@ -11,13 +11,11 @@ import org.apache.http.entity.StringEntity;
 
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpRequest;
 import java.util.Scanner;
 
 public class NotionAPI implements NotionApiManager{
 
-    private final String baseUrl = "https://api.notion.com/v1/";
+    public static final String BASEURL = "https://api.notion.com/v1/";
     private final HttpClient httpClient;
     private String apiKey; 
     
@@ -39,7 +37,7 @@ public class NotionAPI implements NotionApiManager{
         }
 
         String endpoint = "pages";
-        HttpPost request = new HttpPost(baseUrl + endpoint);
+        HttpPost request = new HttpPost(BASEURL + endpoint);
 
         request.addHeader("Authorization", "Bearer " + apiKey);
         request.addHeader("Notion-Version", "2021-05-13");
@@ -57,7 +55,6 @@ public class NotionAPI implements NotionApiManager{
             if (statusCode == 200) {
                 return EntityUtils.toString(response.getEntity());
             } else {
-                // Gestion des erreurs si la requête n'est pas réussie (statut différent de 200)
                 System.err.println("Erreur lors de la création de la note sur notion: " + statusCode);
                 return null;
             }
@@ -76,20 +73,18 @@ public class NotionAPI implements NotionApiManager{
         }
 
         String endpoint = "pages/" + pageId;
-        HttpGet request = new HttpGet(baseUrl + endpoint);
+        HttpGet request = new HttpGet(BASEURL + endpoint);
 
         request.addHeader("Authorization", "Bearer " + apiKey);
         request.addHeader("Notion-Version", "2021-05-13");
 
         try {
-            // Exécution de la requête et récupération de la réponse
             HttpResponse response = httpClient.execute(request);
             int statusCode = response.getStatusLine().getStatusCode();
 
             if (statusCode == 200) {
                 return EntityUtils.toString(response.getEntity());
             } else {
-                // Gestion des erreurs si la requête n'est pas réussie (statut différent de 200)
                 System.err.println("Erreur lors de la récupération de la page: " + statusCode);
                 return null;
             }
@@ -109,25 +104,22 @@ public class NotionAPI implements NotionApiManager{
         }
 
         String endpoint = "pages/" + pageId;
-        HttpPatch request = new HttpPatch(baseUrl + endpoint);
+        HttpPatch request = new HttpPatch(BASEURL + endpoint);
 
         request.addHeader("Authorization", "Bearer " + apiKey);
         request.addHeader("Notion-Version", "2021-05-13");
         request.addHeader("Content-Type", "application/json");
 
         try {
-            // Ajoutez le JSON des nouvelles propriétés à mettre à jour
             StringEntity requestBody = new StringEntity(propertiesJson);
             request.setEntity(requestBody);
 
-            // Exécution de la requête et récupération de la réponse
             HttpResponse response = httpClient.execute(request);
             int statusCode = response.getStatusLine().getStatusCode();
 
             if (statusCode == 200) {
                 return EntityUtils.toString(response.getEntity());
             } else {
-                // Gestion des erreurs si la requête n'est pas réussie (statut différent de 200)
                 System.err.println("Erreur lors de la mise à jour de la page: " + statusCode);
                 return null;
             }

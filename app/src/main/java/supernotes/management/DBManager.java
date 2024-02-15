@@ -23,11 +23,11 @@ public interface DBManager {
     List<LocalDateTime> getReminders(int noteId);
 
     boolean deleteRemindersByNoteId(int noteId);
-    int addTextNote(String content, String tag, String parent_page_id, String page_id, String time);
+    int addTextNote(String content, String tag, String parentPageId, String pageId, String time);
 
-    int addImageNote(String content, byte[] imageBytes, String tag, String parent_page_id, String page_id, String time);
+    int addImageNote(String content, byte[] imageBytes, String tag, String parentPageId, String pageId, String time);
 
-    void deleteNoteByNoteId(int note_id);
+    void deleteNoteByNoteId(int noteId);
 
     void deleteNoteByTag(String tag);
 
@@ -39,7 +39,7 @@ public interface DBManager {
 
     String getParentPageId();
 
-    String getPageId(String Content);
+    String getPageId(String content);
 
     void updateNoteContentInDB(String pageId, String newContent);
 
@@ -53,4 +53,6 @@ public interface DBManager {
     int linkNotesWithANDBeforeDate(int noteId, String[] tags, String linkName, String date);
 
     int linkNotesWithANDAfterDate(int noteId, String[] tags, String linkName, String date);
+
+    boolean getAllLinksByName(String linkName);
 }

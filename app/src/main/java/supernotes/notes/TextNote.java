@@ -2,8 +2,7 @@ package supernotes.notes;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+
 
 
 public class TextNote implements Note<String> {
@@ -80,6 +79,11 @@ public class TextNote implements Note<String> {
         return time;
     }
 
+    @Override
+    public void setTime(String time) {
+        this.time = time;
+    }
+    
     @Override
     public String getType() {
         return type;

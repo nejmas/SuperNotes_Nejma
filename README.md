@@ -9,7 +9,7 @@
 
 ## Description
 
-SuperNote est un plugin polyvalent de gestion de notes conçu pour offrir une expérience de prise de notes rapide et efficace. Il peut être utilisé en ligne de commande, et il est destiné à fonctionner avec diverses plateformes de prise de notes et environnements de développement intégrés (IDE).
+SuperNote est une application de gestion de notes, offrant une gamme étendue de fonctionnalités pour répondre aux besoins de tous les utilisateurs, des particuliers aux professionnels. Cette application permet de créer, organiser, filtrer, exporter et synchroniser les notes sur différents supports, offrant ainsi une flexibilité maximale dans la gestion des informations.
 
 ---
 
@@ -51,55 +51,37 @@ SuperNote est un plugin polyvalent de gestion de notes conçu pour offrir une ex
    ```
 
 ---
-
-## Utilisation
-
-Une fois l'application lancée, voici quelques exemples de commandes pour interagir avec SuperNote :
-
-- **Ajouter une Note :**
-    ```bash
-    sn add "Contenu de la note" --tag "tag"
-    ```
-
-- **Exporter les Notes dans un fichier pdf:**
-    ```bash
-    sn export --all "chemin/vers/le/fichier.pdf"
-    ```
-
----
 ## Version v0.2
 
 La version v0.2 de SuperNote propose les fonctionnalités suivantes :
 
 ### Création et Géstion des Notes
-- **Créer une Note de type texte:** Permet de créer une nouvelle note avec un contenu spécifié et l'associe à un tag.
-  ```bash
-  sn add "Contenu de la note"
 
-- **Ajouter une Note de type texte avec un Tag :** Permet de créer une nouvelle note avec un contenu spécifié et l'associe à un tag.
+- **Créer une Note de type texte avec un Tag :** Permet de créer une nouvelle note avec un contenu spécifié et l'associe à un tag.
   ```bash
   sn add "Contenu de la note" --tag mon_tag
 
-- **Créer une Note de type Image:** Permet de créer une nouvelle note avec un contenu spécifié et l'associe à un tag.
-  ```bash
-  sn add "chemin/vers/image.png"
-
-- **Ajouter une Note de type image avec un Tag :** Permet de créer une nouvelle note avec un contenu spécifié et l'associe à un tag.
+- **Créer une Note de type image avec un Tag :** Permet de créer une nouvelle note avec un contenu spécifié et l'associe à un tag.
   ```bash
   sn add "chemin/vers/image.png" --tag "mon_tag"
 
 - **AEnregistrer les Notes dans une Base de Données SQLite :**  Stocke toutes les notes et leurs tags associés dans une base de données SQLite.
 
-- **Supprimer les notes par Tag :** Permet de supprimer toutes les notes associées à un tag spécifique. Spécifié et l'associe à un tag.
-
+- **Supprimer les notes par Tag :** Permet de supprimer toutes les notes associées à un tag spécifique
   ```bash
   sn delete --tag "mon_tag_a_supprimer"
+  
+- **Supprimer une note par Id :** Permet de supprimer une note par Id.
+   ```bash
+   sn delete --tag "mon_tag_a_supprimer"
+   
+- **Afficher les notes :**
+   ```bash
+   sn show notes
 
 ### Générer un Rapport de Notes
 
 - **Générer un Rapport de Toutes les Notes :** Crée un rapport sous format PDF contenant toutes les notes existantes.
-- spécifié et l'associe à un tag.
-
   ```bash
   sn export --all "chemin/vers/fichier.pdf"
 
@@ -114,7 +96,6 @@ La version v0.2 de SuperNote propose les fonctionnalités suivantes :
 **Fermer l'Application :**
     ```bash
     exit
-    ```
 
 - Cette version offre la possibilité de créer, gérer, filtrer et générer des rapports pour vos notes, en utilisant des tags et des mots-clés pour une organisation avancée et une gestion efficace.
 ---
@@ -258,11 +239,7 @@ La version v0.4 de SuperNote propose les fonctionnalités suivantes :
 
 ## Exportation des notes en texte brut
 
-- Exportation en texte brut : Permettre aux utilisateurs d'exporter leurs notes dans un fichier texte (.txt) pour une compatibilité maximale avec d'autres applications et systèmes.
-
-#### Utilisation
-
-- **Ajout d'une nouvelle commande pour l'exportation en texte brut :** Ajouter une nouvelle option à la commande sn export pour spécifier le format de sortie comme suit :
+- **Exporter les notes en texte brut :** Permettre aux utilisateurs d'exporter leurs notes dans un fichier texte (.txt) pour une compatibilité maximale avec d'autres applications et systèmes.
   ```bash
   sn export --text "chemin/vers/fichier.txt"
 
@@ -303,27 +280,19 @@ Pour exécuter l'extension Visual Studio Code :
         - ctrl+alt+J (Windows & Ubuntu)
         - cmd+alt+J (Mac)
 
-## Affichage des Notes dans le Terminal de SuperNote
+## Lier des Notes (Commande sn link)
 
-Cette fonctionnalité permet à l'utilisateur de SuperNote d'afficher ses notes dans le terminal en utilisant une commande spécifique. L'objectif est de faciliter la visualisation rapide du contenu des notes, de leurs tags associés, ainsi que des horaires de création.
+- **Lier des notes :** permet de lier une note existante à un ou plusieurs tags spécifiques, tout en lui attribuant un nom distinct pour une référence facile. Cette fonctionnalité est utile pour organiser et catégoriser vos notes de manière significative.
+  ```bash
+  sn link --id "ID_de_la_note" --tag "tag1" [and/or] "tag2" [...] --name "Nom_de_lien" [--at/--before/--after "Date"]
 
-#### Utilisation
+- **Afficher les Liens :** permet d'afficher les liens précédemment établis entre des notes et des tags, en utilisant le nom de lien spécifié lors de la création.
+  ```bash
+  sn show --link "Nom_de_lien"
 
-- **Une fois les notes sont crées à l'aide des commande :**
+## Documentation
 
-`sn add "Contenu de la note"`
-
-`sn add "Contenu de la note" --tag mon_tag`
-
-`sn add "chemin/vers/image.png"`
-
-- **Pour afficher les notes dans le terminal :**
-
-Il faut la commande suivante.
-
-`sn show notes`
-
-
+[Lien vers la documentation](https://github.com/dounyaa/SuperNotes/blob/main/app/src/docs/asciidoc/main.adoc)
 
 ## Groupe
 

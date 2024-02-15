@@ -3,9 +3,6 @@ package supernotes.notes;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ImageNote implements Note<byte[]> {
@@ -85,6 +82,11 @@ public class ImageNote implements Note<byte[]> {
     }
 
     @Override
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    @Override
     public String getType() {
         return type;
     }
@@ -93,7 +95,7 @@ public class ImageNote implements Note<byte[]> {
         return path;
     }
 
-    public void setPath() {
+    public void setPath(String path) {
        this.path = path;
     }
 
