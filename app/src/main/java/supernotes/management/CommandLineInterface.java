@@ -106,7 +106,7 @@ public class CommandLineInterface {
     }
 
     private boolean parseAddNoteCommand(String command) {
-        Pattern addNotePattern = Pattern.compile("sn add \"([^\"]*)\"(?: --tag ([^\"]*(?:\"[^\"]*\"[^\"]*)*)?)?");
+        Pattern addNotePattern = Pattern.compile("sn add \"([^\"]+)\"(?: --tag \"([^\"]+)\")?(?: \"([^\"]+)\")*");
         Matcher addNoteMatcher = addNotePattern.matcher(command);
 
         if (addNoteMatcher.matches()) {
