@@ -73,7 +73,7 @@ public class SQLiteDBManager implements DBManager {
             if (conn != null) {
                 executeStatement(sql);
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -92,7 +92,7 @@ public class SQLiteDBManager implements DBManager {
                     pstmt.executeUpdate();
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -120,7 +120,7 @@ public class SQLiteDBManager implements DBManager {
                     }
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -143,17 +143,17 @@ public class SQLiteDBManager implements DBManager {
     
                     int rowsAffected = pstmt.executeUpdate();
                     if (rowsAffected > 0) {
-                        System.out.println("Tous les rappels pour la note avec l'ID " + noteId + " ont été supprimés avec succès !");
+                        LOGGER.info("Tous les rappels pour la note avec l'ID {} ont été supprimés avec succès !", noteId);
                         success = true;
                     } else {
-                        System.out.println("Aucun rappel trouvé pour la note avec l'ID " + noteId + ".");
+                        LOGGER.info("Aucun rappel trouvé pour la note avec l'ID {} ", noteId);
                     }
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression des rappels pour la note avec l'ID " + noteId + " : " + e.getMessage());
+            LOGGER.info("Erreur lors de la suppression des rappels pour la note avec l'ID {} : {}",noteId ,e.getMessage());
         }
     
         return success;
@@ -188,7 +188,7 @@ public class SQLiteDBManager implements DBManager {
                     }
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -222,7 +222,7 @@ public class SQLiteDBManager implements DBManager {
                     }
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -262,7 +262,7 @@ public class SQLiteDBManager implements DBManager {
                 }
             }
         } else {
-            System.out.println("La connexion à la base de données est nulle.");
+            LOGGER.info("La connexion à la base de données est nulle.");
         }
     
         return tagIds;
@@ -287,7 +287,7 @@ public class SQLiteDBManager implements DBManager {
                         pstmt.executeUpdate();
                     }
                 } else {
-                    System.out.println("La connexion à la base de données est nulle.");
+                    LOGGER.info("La connexion à la base de données est nulle.");
                 }
             } catch (SQLException e) {
                 LOGGER.error("Une erreur s'est produite.", e);
@@ -307,7 +307,7 @@ public class SQLiteDBManager implements DBManager {
                     pstmt.executeUpdate();
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -337,7 +337,7 @@ public class SQLiteDBManager implements DBManager {
                     conn.commit();
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -382,7 +382,7 @@ public class SQLiteDBManager implements DBManager {
                     }
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -420,21 +420,21 @@ public class SQLiteDBManager implements DBManager {
                         // Vérifiez si la date de création a changé
                         if (!creationDate.equals(tempDate)) {
                             if (tempDate != null) {
-                                System.out.println(); // Ajouter une ligne vide entre les groupes de dates
+                                LOGGER.info(" "); // Ajouter une ligne vide entre les groupes de dates
                             }
-                            System.out.println("Created on : " + creationDate);
+                            LOGGER.info("Created on : {} ", creationDate);
                             System.out.print("--------------------------------"); // La longueur de la ligne est fixe
-                            System.out.println();
+                            LOGGER.info(" ");
                             tempDate = creationDate;
                         }
 
                         // Vérifiez si l'id de note a changé
                         if (note1Id != tempNoteId) {
-                            System.out.println("note id = " + note1Id + "  --->  id =" + note2Id);
+                            LOGGER.info("note id = {}   --->  id = {}", note1Id, note2Id);
                             tempNoteId = note1Id;
                         } else {
                             // Imprimer des espaces pour aligner les sorties
-                            System.out.println("             --->  id =" + note2Id);
+                            LOGGER.info("             --->  id = {}", note2Id);
                         }
                     } while (rs.next());
 
@@ -444,10 +444,10 @@ public class SQLiteDBManager implements DBManager {
                     }
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
-            System.out.println("An error occurred: " + e.getMessage());
+            LOGGER.info("An error occurred: {} ", e.getMessage());
             LOGGER.error("Une erreur s'est produite.", e);
         }
         return false;
@@ -483,7 +483,7 @@ public class SQLiteDBManager implements DBManager {
                 }
             }
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            LOGGER.info(e.getMessage());
         }
 
         return result;
@@ -519,7 +519,7 @@ public class SQLiteDBManager implements DBManager {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            LOGGER.info(e.getMessage());
         }
 
         return result;
@@ -540,7 +540,7 @@ public class SQLiteDBManager implements DBManager {
                     }
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -564,7 +564,7 @@ public class SQLiteDBManager implements DBManager {
                     }
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -581,10 +581,10 @@ public class SQLiteDBManager implements DBManager {
                     pstmt.setString(1, newContent);
                     pstmt.setString(2, pageId);
                     pstmt.executeUpdate();
-                    System.out.println("Contenu de la note mis à jour !");
+                    LOGGER.info("Contenu de la note mis à jour !");
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -605,7 +605,7 @@ public class SQLiteDBManager implements DBManager {
                     }
                 }
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -620,12 +620,12 @@ public class SQLiteDBManager implements DBManager {
         int noteId1 = noteId;
         boolean valid = doesNoteExistWithId(noteId1);
         if (noteId1 == 0 || !valid) {
-            System.out.println("ID de note invalide");
+            LOGGER.info("ID de note invalide");
             return linkId;
         }
         List<Integer> tagIds = findTagIdsWithOR(tags);
         if (tagIds.isEmpty()) {
-            System.out.println("Aucune donnée n'existe avec le tag");
+            LOGGER.info("Aucune donnée n'existe avec le tag");
             return linkId;
         }
         List<Integer> associatedNoteIds = findAssociatedNoteIds(tagIds);
@@ -654,7 +654,7 @@ public class SQLiteDBManager implements DBManager {
                     }
                 } 
             } else {
-                System.out.println("La connexion à la base de données est nulle.");
+                LOGGER.info("La connexion à la base de données est nulle.");
             }
         } catch (SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -692,7 +692,7 @@ public class SQLiteDBManager implements DBManager {
                         }
                     }
                 } else {
-                    System.out.println("La connexion à la base de données est nulle.");
+                    LOGGER.info("La connexion à la base de données est nulle.");
                 }
             }
         } catch (SQLException e) {
@@ -724,7 +724,7 @@ public class SQLiteDBManager implements DBManager {
                         }
                     }
                 } else {
-                    System.out.println("La connexion à la base de données est nulle.");
+                    LOGGER.info("La connexion à la base de données est nulle.");
                 }
             }
         } catch (SQLException e) {
@@ -764,11 +764,11 @@ public class SQLiteDBManager implements DBManager {
                         }
                     }
                 } else {
-                    System.out.println("La connexion à la base de données est nulle.");
+                    LOGGER.info("La connexion à la base de données est nulle.");
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Aucun enregistrement trouvé pour les balises");
+            LOGGER.info("Aucun enregistrement trouvé pour les balises");
         }
     
         return noteIds;
@@ -805,16 +805,16 @@ public class SQLiteDBManager implements DBManager {
                         conn.commit();
                     }
                 } catch (SQLException e) {
-                    System.out.println("SQLException during statement execution: " + e.getMessage());
+                    LOGGER.info("SQLException during statement execution: {} ", e.getMessage());
                     conn.rollback();
                     throw e;
                 }
             } else {
-                System.out.println("Erreur lors de l'établissement de la connexion à la base de données : la connexion est nulle.");
+                LOGGER.info("Erreur lors de l'établissement de la connexion à la base de données : la connexion est nulle.");
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'établissement de la connexion à la base de données : " + e.getMessage());
-            LOGGER.error("Une erreur s'est produite.", e);
+            LOGGER.info("Erreur lors de l'établissement de la connexion à la base de données : {} ", e.getMessage());
+            LOGGER.error("Une erreur s'est produite. ", e);
         }
     
         return linkId;
@@ -828,12 +828,12 @@ public class SQLiteDBManager implements DBManager {
         int noteId1 = noteId;
         boolean valid = doesNoteExistWithId(noteId1);
         if (noteId1 == 0 || !valid) {
-            System.out.println("ID de note invalide");
+            LOGGER.info("ID de note invalide");
             return linkId;
         }
         List<Integer> tagIds = findTagIdsWithAND(tags);
         if (tagIds.isEmpty() || tagIds.size() == 1) {
-            System.out.println("Aucune donnée n'existe avec le tag");
+            LOGGER.info("Aucune donnée n'existe avec le tag");
             return linkId;
         }
         List<Integer> associatedNoteIds = findAssociatedNoteIds(tagIds);
@@ -853,18 +853,18 @@ public class SQLiteDBManager implements DBManager {
         int noteId1 = noteId;
         boolean valid = doesNoteExistWithId(noteId1);
         if (noteId1 == 0 || !valid) {
-            System.out.println("ID de note invalide");
+            LOGGER.info("ID de note invalide");
             return linkId;
         }
         List<Integer> tagIds = findTagIdsWithAND(tags);
         if (tagIds.isEmpty() || tagIds.size() == 1) {
-            System.out.println("Aucune donnée n'existe avec le tag");
+            LOGGER.info("Aucune donnée n'existe avec le tag");
             return linkId;
         }
         List<Integer> associatedNoteIds = findAssociatedNoteIds(tagIds);
         List<Integer> associatednoteIdsAtDate = findAssociatedNoteIdsAtDate(associatedNoteIds, date);
         if (associatednoteIdsAtDate.isEmpty()) {
-            System.out.println("Aucune donnée n'existe pour la date: " + date);
+            LOGGER.info("Aucune donnée n'existe pour la date: {} " , date);
             return linkId;
         }
         LocalDateTime dateTime = LocalDateTime.now();
@@ -882,18 +882,18 @@ public class SQLiteDBManager implements DBManager {
         int noteId1 = noteId;
         boolean valid = doesNoteExistWithId(noteId1);
         if (noteId1 == 0 || !valid) {
-            System.out.println("ID de note invalide");
+            LOGGER.info("ID de note invalide");
             return linkId;
         }
         List<Integer> tagIds = findTagIdsWithAND(tags);
         if (tagIds.isEmpty() || tagIds.size() == 1) {
-            System.out.println("Aucune donnée n'existe pour la tags");
+            LOGGER.info("Aucune donnée n'existe pour la tags");
             return linkId;
         }
         List<Integer> associatedNoteIds = findAssociatedNoteIds(tagIds);
         List<Integer> associatednoteIdsBeforeDate = findAssociatedNoteIdsBeforeDate(associatedNoteIds, date);
         if (associatednoteIdsBeforeDate.isEmpty()) {
-            System.out.println("Aucune donnée n'existe avant la date: " + date);
+            LOGGER.info("Aucune donnée n'existe avant la date: {} " , date);
             return linkId;
         }
         LocalDateTime dateTime = LocalDateTime.now();
@@ -911,18 +911,18 @@ public class SQLiteDBManager implements DBManager {
         int noteId1 = noteId;
         boolean valid = doesNoteExistWithId(noteId1);
         if (noteId1 == 0 || !valid) {
-            System.out.println("ID de note invalide");
+            LOGGER.info("ID de note invalide");
             return linkId;
         }
         List<Integer> tagIds = findTagIdsWithAND(tags);
         if (tagIds.isEmpty() || tagIds.size() == 1) {
-            System.out.println("Aucune donnée n'existe pour la tags");
+            LOGGER.info("Aucune donnée n'existe pour la tags");
             return linkId;
         }
         List<Integer> associatedNoteIds = findAssociatedNoteIds(tagIds);
         List<Integer> associatednoteIdsAfterDate = findAssociatedNoteIdsAfterDate(associatedNoteIds, date);
         if (associatednoteIdsAfterDate.isEmpty()) {
-            System.out.println("Aucune donnée n'existe après la date: " + date);
+            LOGGER.info("Aucune donnée n'existe après la date: {} ", date);
             return linkId;
         }
         LocalDateTime dateTime = LocalDateTime.now();
@@ -958,7 +958,7 @@ public class SQLiteDBManager implements DBManager {
                         }
                     }
                 } else {
-                    System.out.println("La connexion à la base de données est nulle.");
+                    LOGGER.info("La connexion à la base de données est nulle.");
                 }
             }
         } catch (SQLException e) {
@@ -992,7 +992,7 @@ public class SQLiteDBManager implements DBManager {
                         }
                     }
                 } else {
-                    System.out.println("La connexion à la base de données est nulle.");
+                    LOGGER.info("La connexion à la base de données est nulle.");
                 }
             }
         } catch (SQLException e) {
@@ -1041,11 +1041,11 @@ public class SQLiteDBManager implements DBManager {
                         }
                     }
                 } else {
-                    System.out.println("La connexion à la base de données est nulle.");
+                    LOGGER.info("La connexion à la base de données est nulle.");
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Une erreur SQL s'est produite : " + e.getMessage());
+            LOGGER.info("Une erreur SQL s'est produite : {}" , e.getMessage());
         }
     
         return matchingNoteIds;
@@ -1060,7 +1060,7 @@ public class SQLiteDBManager implements DBManager {
             connection = DriverManager.getConnection("jdbc:sqlite:notes.db");
             createNotesTable();
             createRemindersTable();
-            System.out.println("Connexion à SQLite établie.");
+            LOGGER.info("Connexion à SQLite établie.");
         } catch (ClassNotFoundException | SQLException e) {
             LOGGER.error("Une erreur s'est produite.", e);
         }
@@ -1072,7 +1072,7 @@ public class SQLiteDBManager implements DBManager {
                 connection = DriverManager.getConnection("jdbc:sqlite:notes.db");
             }
         } catch (SQLException e) {
-            System.out.println("Une erreur s'est produite lors de la connexion à SQLite : " + e.getMessage());
+            LOGGER.info("Une erreur s'est produite lors de la connexion à SQLite {}: ", e.getMessage());
         }
 
         return connection;

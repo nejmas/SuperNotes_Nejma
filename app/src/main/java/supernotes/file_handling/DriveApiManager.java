@@ -24,7 +24,11 @@ import java.security.GeneralSecurityException;
 import java.util.Arrays;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DriveApiManager {
+  private static final Logger LOGGER = LoggerFactory.getLogger(DriveApiManager.class);
   private static final String APPLICATION_NAME = "Google Drive API Java Quickstart";
   private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
   private static final String TOKENS_DIRECTORY_PATH = "tokens";
@@ -70,7 +74,7 @@ public class DriveApiManager {
       File file = service.files().create(fileMetadata, mediaContent)
               .setFields("id")
               .execute();
-      System.out.println("File ID: " + file.getId());
+            LOGGER.info("File ID: {}", file.getId());
       return true;
     } catch (GoogleJsonResponseException e) {
       System.err.println("Impossible de transférer le fichier vers Google Drive: " + e.getDetails());

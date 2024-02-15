@@ -45,7 +45,7 @@ public class GoogleCalendarReminder {
             event.setEnd(endEventDateTime);
 
             Event createdEvent = service.events().insert("primary", event).execute();
-            System.out.println("Event created: " + createdEvent.getHtmlLink());
+            LOGGER.info("Event created: {} ",createdEvent.getHtmlLink());
         } catch (IOException | GeneralSecurityException e) {
             LOGGER.error("Une erreur s'est produite.", e);
         }

@@ -81,14 +81,13 @@ public class FileManager implements FileHandler {
                 }
             }
 
-            System.out.println("Exportation terminée : " + filePath);
-
+            LOGGER.info("Exportation terminée : {}", filePath);
             boolean isUploaded = DriveApiManager.uploadFile(filePath);
 
             if (isUploaded) {
-                System.out.println("Fichier téléchargé sur Google Drive");
+                LOGGER.info("Fichier téléchargé sur Google Drive");
             } else {
-                System.out.println("Erreur réseau");
+                LOGGER.error("Erreur réseau");
             }
         } catch (Exception e) {
             LOGGER.error("Une erreur s'est produite.", e);
@@ -103,9 +102,9 @@ public class FileManager implements FileHandler {
                 writer.write("Tag: " + note.getTag() + "\n");
                 writer.write("Content: " + note.getContent() + "\n\n");
             }
-            System.out.println("Exportation des notes en texte brut terminée : " + filePath);
+            LOGGER.info("Exportation des notes en texte brut terminée {}: ", filePath);
         } catch (IOException e) {
-            System.out.println("Erreur lors de l'exportation en texte brut : " + e.getMessage());
+            LOGGER.info("Erreur lors de l'exportation en texte brut {} : ", e.getMessage());
         }
     }
 

@@ -34,7 +34,7 @@ public class NotionAPI implements NotionApiManager{
 
         if (apiKey == null || apiKey.isEmpty()) {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Veuillez saisir votre clé API Notion : ");
+            LOGGER.info("Veuillez saisir votre clé API Notion : ");
             String userApiKey = scanner.nextLine();
             setApiKey(userApiKey);
         }
@@ -70,7 +70,7 @@ public class NotionAPI implements NotionApiManager{
     public String retrievePageContent(String pageId) {
         if (apiKey == null || apiKey.isEmpty()) {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Veuillez saisir votre clé API Notion : ");
+            LOGGER.info("Veuillez saisir votre clé API Notion : ");
             String userApiKey = scanner.nextLine();
             setApiKey(userApiKey);
         }
@@ -101,7 +101,7 @@ public class NotionAPI implements NotionApiManager{
 
         if (apiKey == null || apiKey.isEmpty()) {
             Scanner scanner = new Scanner(System.in);
-            System.out.println("Veuillez saisir votre clé API Notion : ");
+            LOGGER.info("Veuillez saisir votre clé API Notion : ");
             String userApiKey = scanner.nextLine();
             setApiKey(userApiKey);
         }
