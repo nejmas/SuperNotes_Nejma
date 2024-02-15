@@ -280,9 +280,19 @@ Pour exécuter l'extension Visual Studio Code :
         - ctrl+alt+J (Windows & Ubuntu)
         - cmd+alt+J (Mac)
 
-## Documentation
-[Lien vers la documentation](https://github.com/dounyaa/SuperNotes/blob/main/app/src/docs/asciidoc/main.adoc)
+## Lier des Notes (Commande sn link)
 
+- **Lier des notes :** permet de lier une note existante à un ou plusieurs tags spécifiques, tout en lui attribuant un nom distinct pour une référence facile. Cette fonctionnalité est utile pour organiser et catégoriser vos notes de manière significative.
+  ```bash
+  sn link --id "ID_de_la_note" --tag "tag1" [and/or] "tag2" [...] --name "Nom_de_lien" [--at/--before/--after "Date"]
+
+- **Afficher les Liens :** permet d'afficher les liens précédemment établis entre des notes et des tags, en utilisant le nom de lien spécifié lors de la création.
+  ```bash
+  sn show --link "Nom_de_lien"
+
+## Documentation
+
+[Lien vers la documentation](https://github.com/dounyaa/SuperNotes/blob/main/app/src/docs/asciidoc/main.adoc)
 
 ## Groupe
 
