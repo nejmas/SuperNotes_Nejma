@@ -7,6 +7,9 @@ import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.apache.http.entity.StringEntity;
 
 
@@ -14,7 +17,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class NotionAPI implements NotionApiManager{
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(NotionAPI.class);
     public static final String BASEURL = "https://api.notion.com/v1/";
     private final HttpClient httpClient;
     private String apiKey; 
@@ -59,7 +62,7 @@ public class NotionAPI implements NotionApiManager{
                 return null;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Une erreur s'est produite.", e);
             return null;
         }
     }
@@ -89,7 +92,7 @@ public class NotionAPI implements NotionApiManager{
                 return null;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Une erreur s'est produite.", e);
             return null; 
         }
     }
@@ -124,7 +127,7 @@ public class NotionAPI implements NotionApiManager{
                 return null;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("Une erreur s'est produite.", e);
             return null;
         }
     }

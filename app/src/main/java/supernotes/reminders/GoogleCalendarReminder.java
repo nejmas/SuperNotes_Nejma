@@ -10,10 +10,15 @@ import java.security.GeneralSecurityException;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.Instant;
 
 
 public class GoogleCalendarReminder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GoogleCalendarReminder.class);
     public static void addEventToCalendar(String noteContent, String startDateTime) {
         try {
             Calendar service = GoogleCalendarService.getCalendarService();
@@ -42,7 +47,7 @@ public class GoogleCalendarReminder {
             Event createdEvent = service.events().insert("primary", event).execute();
             System.out.println("Event created: " + createdEvent.getHtmlLink());
         } catch (IOException | GeneralSecurityException e) {
-            e.printStackTrace();
+            LOGGER.error("Une erreur s'est produite.", e);
         }
     }
 }

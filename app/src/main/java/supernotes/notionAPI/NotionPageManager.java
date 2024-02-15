@@ -1,16 +1,16 @@
 package supernotes.notionAPI;
 import org.json.*;
-import org.json.JSONObject;
-import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class NotionPageManager implements NotionManager{
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(NotionPageManager.class);
     public String extractNewPageId(String newPage) {
         try {
             JSONObject jsonResponse = new JSONObject(newPage);
             return jsonResponse.optString("id");
         } catch (JSONException e) {
-            e.printStackTrace();
+            LOGGER.error("Une erreur s'est produite.", e);
             return null;
         }
     }
@@ -21,7 +21,7 @@ public class NotionPageManager implements NotionManager{
             JSONObject parentObject = jsonResponse.getJSONObject("parent");
             return parentObject.getString("page_id");
         } catch (JSONException e) {
-            e.printStackTrace();
+            LOGGER.error("Une erreur s'est produite.", e);
             return null;
         }
     }
@@ -35,7 +35,7 @@ public class NotionPageManager implements NotionManager{
             JSONObject textObject = titleArray.getJSONObject(0);
             return textObject.getJSONObject("text").getString("content");
         } catch (JSONException e) {
-            e.printStackTrace();
+            LOGGER.error("Une erreur s'est produite.", e);
             return null;
         }
     }

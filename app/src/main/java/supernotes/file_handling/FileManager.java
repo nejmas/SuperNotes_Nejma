@@ -14,8 +14,12 @@ import supernotes.notes.TextNote;
 
 import java.util.List;
 import java.io.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileManager implements FileHandler {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FileManager.class);
+
     public void exportPdfFile(String filePath, String tag) {
 
         try {
@@ -30,7 +34,7 @@ public class FileManager implements FileHandler {
 
             exportPdf(filePath, result);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Une erreur s'est produite.", e);
         }
     }
 
@@ -47,14 +51,14 @@ public class FileManager implements FileHandler {
 
             exportPdf(filePath, result);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Une erreur s'est produite.", e);
         }
     }
 
     private void exportPdf(String filePath, List<Note> result) {
         try (PdfWriter writer = new PdfWriter(new FileOutputStream(filePath));
-        PdfDocument pdf = new PdfDocument(writer);
-        Document document = new Document(pdf)){
+                PdfDocument pdf = new PdfDocument(writer);
+                Document document = new Document(pdf)) {
 
             var notesIterator = result.iterator();
             while (notesIterator.hasNext()) {
@@ -87,7 +91,7 @@ public class FileManager implements FileHandler {
                 System.out.println("Erreur réseau");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("Une erreur s'est produite.", e);
         }
     }
 
@@ -105,6 +109,4 @@ public class FileManager implements FileHandler {
         }
     }
 
-
 }
-
