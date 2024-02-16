@@ -294,6 +294,19 @@ Pour exécuter l'extension Visual Studio Code :
 
 [Lien vers la documentation](https://github.com/dounyaa/SuperNotes/blob/main/app/src/docs/asciidoc/main.adoc)
 
+## Refactoring
+
+### Statistiques SonarQube
+
+Avant le refactoring :
+
+![Statistiques de refactoring](https://github.com/dounyaa/SuperNotes/blob/main/app/src/main/resources/avant_refactoring.png)
+
+Après le refactoring :
+
+![Statistiques de refactoring](https://github.com/dounyaa/SuperNotes/blob/main/app/src/main/resources/apres_refactoring.png)
+
+
 ## Groupe
 
 - Dounya Alaoui
