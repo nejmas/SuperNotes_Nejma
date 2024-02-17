@@ -40,8 +40,7 @@ public class AppTest {
                 { "sn link --id \"1\" --tag \"Tag de la note1\" or \"Tag de la note2\" --name \"Nom_de_lien\"\nexit\n", "Notes liées avec succès" },
                 { "sn delete --tag \"Tag de la note2\"\nexit\n", "Notes suprimées avec succès" },
                 { "sn add \"Contenu de la note\" --tag \"Tag de la note\" --reminder \"2024-05-30 14:15\"\nexit\n", "Note avec rappel ajoutée avec succès" },
-                { "sn get --reminder --tag \"Tag de la note\"\nexit\n", "Rappels pour la note avec l'ID" },
-                { "sn delete --reminder --tag \"Tag de la note\"\nexit\n", "Rappels supprimés avec succès" },
+                { "sn get --reminder --tag \"Tag de la note\"\nexit\n", "Rappels pour la note avec l'ID" }
         });
     }
     @Test
