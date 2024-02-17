@@ -3,9 +3,73 @@
  */
 package supernotes;
 
+import junit.framework.TestCase;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import supernotes.helpers.InputScanner;
 
+import java.io.*;
+import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
+
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+
+@RunWith(Parameterized.class)
 public class AppTest {
+
+    private String command;
+    private String expectedOutput;
+
+    public AppTest(String command, String expectedOutput) {
+        this.command = command;
+        this.expectedOutput = expectedOutput;
+    }
+
+    @Parameterized.Parameters
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] {
+                { "sn add \"Contenu de la note1\" --tag \"Tag de la note1\"\nexit\n", "Note ajoutée avec succès avec l'identifiant" },
+                { "sn add \"Contenu de la note2\" --tag \"Tag de la note2\"\nexit\n", "Note ajoutée avec succès avec l'identifiant" },
+                { "sn link --id \"1\" --tag \"Tag de la note1\" or \"Tag de la note2\" --name \"Nom_de_lien\"\nexit\n", "Notes liées avec succès" },
+                { "sn delete --tag \"Tag de la note2\"\nexit\n", "Notes suprimées avec succès" },
+                { "sn add \"Contenu de la note\" --tag \"Tag de la note\" --reminder \"2024-05-30 14:15\"\nexit\n", "Note avec rappel ajoutée avec succès" },
+                { "sn get --reminder --tag \"Tag de la note\"\nexit\n", "Rappels pour la note avec l'ID" }
+        });
+    }
+    @Test
+    public void TestAddNoteCommands() throws SQLException, IOException {
+        // Define input
+        String input = this.command;
+
+        // Capture output
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        // Set up System.in with simulated input
+        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        System.setIn(inputStream);
+        InputScanner.setInstance(null);
+
+        try {
+            App.main(new String[0]);
+
+            String actualOutput = outputStream.toString().trim();
+            inputStream.close();
+            outputStream.close();
+
+            assertTrue(actualOutput.contains(this.expectedOutput));
+
+        } catch (Exception e) {
+            assertTrue("Unexpected exception thrown: " + e.getMessage(), false);
+            throw e;
+        }
+    }
 
 }
