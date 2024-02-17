@@ -1,6 +1,7 @@
 package supernotes;
 
 import supernotes.file_handling.*;
+import supernotes.helpers.InputScanner;
 import supernotes.management.*;
 import supernotes.notes.*;
 import supernotes.notionAPI.NotionAPI;
@@ -19,13 +20,15 @@ public class App {
         FileManager fileManager = new FileManager();
         CommandLineInterface commandLineInterface = new CommandLineInterface(new TextNoteFactory(), new ImageNoteFactory(), fileManager, new NotionPageManager(), new NotionAPI());
         String command = "";
+        Scanner scanner = InputScanner.getInstance();
         do {
-            Scanner scanner = new Scanner(System.in);
             LOGGER.info("Veuillez entrer votre commande : ");
             command = scanner.nextLine();
 
             commandLineInterface.parseCommand(command);
 
         } while (!command.equals("exit"));
+
+        scanner.reset();
     }
 }

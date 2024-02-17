@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.http.entity.StringEntity;
+import supernotes.helpers.InputScanner;
 
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ public class NotionAPI implements NotionApiManager{
     public String createNotionPage(String parentPageId, String propertiesJson) {
 
         if (apiKey == null || apiKey.isEmpty()) {
-            Scanner scanner = new Scanner(System.in);
+            Scanner scanner = InputScanner.getInstance();
             LOGGER.info("Veuillez saisir votre clé API Notion : ");
             String userApiKey = scanner.nextLine();
             setApiKey(userApiKey);
@@ -69,7 +70,7 @@ public class NotionAPI implements NotionApiManager{
 
     public String retrievePageContent(String pageId) {
         if (apiKey == null || apiKey.isEmpty()) {
-            Scanner scanner = new Scanner(System.in);
+            Scanner scanner = InputScanner.getInstance();
             LOGGER.info("Veuillez saisir votre clé API Notion : ");
             String userApiKey = scanner.nextLine();
             setApiKey(userApiKey);
@@ -100,7 +101,7 @@ public class NotionAPI implements NotionApiManager{
     public String updatePageProperties(String pageId, String propertiesJson) {
 
         if (apiKey == null || apiKey.isEmpty()) {
-            Scanner scanner = new Scanner(System.in);
+            Scanner scanner = InputScanner.getInstance();
             LOGGER.info("Veuillez saisir votre clé API Notion : ");
             String userApiKey = scanner.nextLine();
             setApiKey(userApiKey);

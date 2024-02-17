@@ -18,7 +18,7 @@ import java.time.Instant;
 
 
 public class GoogleCalendarReminder {
-    private static final Logger LOGGER = LoggerFactory.getLogger(GoogleCalendarReminder.class);
+    //private static final Logger LOGGER = LoggerFactory.getLogger(GoogleCalendarReminder.class);
     public static void addEventToCalendar(String noteContent, String startDateTime) {
         try {
             Calendar service = GoogleCalendarService.getCalendarService();
@@ -45,9 +45,11 @@ public class GoogleCalendarReminder {
             event.setEnd(endEventDateTime);
 
             Event createdEvent = service.events().insert("primary", event).execute();
-            LOGGER.info("Event created: {} ",createdEvent.getHtmlLink());
+            //LOGGER.info("Event created: {} ",createdEvent.getHtmlLink());
+            System.out.println("Event created: " + createdEvent.getHtmlLink() );
         } catch (IOException | GeneralSecurityException e) {
-            LOGGER.error("Une erreur s'est produite.", e);
+            //LOGGER.error("Une erreur s'est produite.", e);
+            System.out.println("Une erreur s'est produite. " + e );
         }
     }
 }
