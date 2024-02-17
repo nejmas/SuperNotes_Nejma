@@ -2,8 +2,10 @@ package supernotes.management;
 
 import com.google.api.client.util.DateTime;
 
+import supernotes.constants.MessagesContants;
 import supernotes.file_handling.FileHandler;
 import supernotes.helpers.InputScanner;
+import supernotes.helpers.MyLogger;
 import supernotes.notes.ImageNote;
 import supernotes.notes.Note;
 import supernotes.notes.NoteFactory;
@@ -24,6 +26,8 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+
 public class CommandLineInterface {
     private final NoteFactory textNoteFactory;
     private final NoteFactory imageNoteFactory;
@@ -31,7 +35,7 @@ public class CommandLineInterface {
     private final NoteManager noteManager;
     private final NotionApiManager notionApiManager;
     private final NotionManager notionManager;
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommandLineInterface.class);
+    private static final MyLogger LOGGER = MyLogger.getInstance();
 
 
     public CommandLineInterface(NoteFactory textNoteFactory, NoteFactory imageNoteFactory, FileHandler fileHandler, NotionManager notionManager, NotionApiManager notionApiManager) {
@@ -123,8 +127,7 @@ public class CommandLineInterface {
             Note note = noteFactory.createNote(noteContent, noteTag, null, null);
 
             int id = noteManager.addNote(note);
-            //System.out.println("Note ajoutée avec succès avec l'identifiant : : {}", id);
-            System.out.println("Note ajoutée avec succès avec l'identifiant : :" + id);
+            LOGGER.logInfo(MessagesContants.NoteAddedSuccessufullyWithId + id);
 
             return true;
         }
@@ -140,8 +143,7 @@ public class CommandLineInterface {
             String noteTag = deleteNotesMatcher.group(1);
 
             noteManager.deleteByTag(noteTag);
-            //System.out.println("Notes suprimées avec succès !");
-            System.out.println("Notes suprimées avec succès !");
+            LOGGER.logInfo(MessagesContants.NoteDeletedSuccessfully);
 
             return true;
         }
@@ -159,12 +161,12 @@ public class CommandLineInterface {
                 int noteId = Integer.parseInt(noteIdString);
         
                 noteManager.deleteNoteByNoteId(noteId);
-                System.out.println("notes suprimées avec succès !");
+                LOGGER.logInfo(MessagesContants.NoteDeletedSuccessfully);
 
                 return true;
 
             } catch (NumberFormatException e) {
-                LOGGER.error("L'ID de la note doit être un nombre entier.");
+                LOGGER.logError(MessagesContants.ErrorNoteIdInvalid);
             }
         }
 
@@ -179,7 +181,7 @@ public class CommandLineInterface {
             String filePath = exportPDFMatcher.group(1);
     
             fileHandler.exportPdfFile(filePath, null);
-            System.out.println("Notes exporter avec succès !");
+            LOGGER.logInfo(MessagesContants.NoteExportedSuccessfully);
 
             return true;
         }
@@ -196,7 +198,7 @@ public class CommandLineInterface {
             String noteTag = exportPDFUsingTagMatcher.group(1);
     
             fileHandler.exportPdfFile(filePath, noteTag);
-            System.out.println("notes exporter avec succès !");
+            LOGGER.logInfo(MessagesContants.NoteExportedSuccessfully);
             return true;
         }
 
@@ -212,7 +214,7 @@ public class CommandLineInterface {
             String filter = exportPDFFilterTagMatcher.group(1);
     
             fileHandler.exportPdfFileUsingFilter(filePath, filter);
-            System.out.println("notes exporter avec succès !");
+            LOGGER.logInfo(MessagesContants.NoteExportedSuccessfully);
             return true;
         }
 
@@ -236,7 +238,7 @@ public class CommandLineInterface {
                 NoteFactory noteFactory = isImage(content) ? imageNoteFactory : textNoteFactory;
                 Note note = noteFactory.createNote(content, "notion", parentId, pageId);
                 noteManager.addNote(note);
-                System.out.println("Page ajoutée à la base de données : ");
+                LOGGER.logInfo(MessagesContants.NotionPageAddedSuccessfully);
 
             }
             return true;
@@ -257,7 +259,7 @@ public class CommandLineInterface {
             if (pageId != null) {
                 noteManager.updateNoteContentInDB(pageId, newContent);
             } else {
-                LOGGER.error("Page introuvable");
+                LOGGER.logError(MessagesContants.ErrorNotionPageNotFound);
             }
             return true;
         }
@@ -277,7 +279,7 @@ public class CommandLineInterface {
     
             if (parentPageId == null) {
                 // Demander à l'utilisateur d'entrer l'ID de la page parent pour la première utilisation
-                System.out.println("Veuillez entrer l'ID de la page :");
+                LOGGER.logInfo("Veuillez entrer l'ID de la page :");
                 Scanner scanner = InputScanner.getInstance();
                 parentPageId = scanner.nextLine();
                 
@@ -291,7 +293,7 @@ public class CommandLineInterface {
             if (newPage != null && !newPage.isEmpty()) {
                 String newPageId = notionManager.extractNewPageId(newPage);
                 Note note = noteFactory.createNote(content, "notion", parentPageId, newPageId);
-                System.out.println("Note ajoutée avec succès !");
+                LOGGER.logInfo(MessagesContants.NoteAddedSuccessufully);
 
                 noteManager.addNote(note);
     
@@ -322,7 +324,7 @@ public class CommandLineInterface {
         if (showAllMatcher.matches()) {
             List<Note> showAllNotes = new ArrayList<>();
             showAllNotes = noteManager.showAllNotes();
-            System.out.println("Notes :- \\n" + //
+            LOGGER.logInfo("Notes :- \\n" + //
                                 "\\n" + //
                                 "\\n" + //
                                 "");
@@ -365,10 +367,10 @@ public class CommandLineInterface {
     
                 noteManager.addNoteWithReminderToCalendar(noteContent, startDateTime.toString());
     
-                System.out.println("Note avec rappel ajoutée avec succès !");
+                LOGGER.logInfo(MessagesContants.NoteWithReminderAddedSuccessfully);
 
             } catch (DateTimeParseException e) {
-                System.out.println("Format de date/heure invalide. Utilisez le format 'yyyy-MM-dd HH:mm'.");
+                LOGGER.logInfo(MessagesContants.ErrorDateFormatInvalid);
             }
             return true;
         }
@@ -394,20 +396,20 @@ public class CommandLineInterface {
     
                     if (!reminders.isEmpty()) {
                         // Affiche les rappels associés à la note avec le tag spécifique
-                        System.out.println("Rappels pour la note avec l'ID" + noteId + " " + note.getContent());
+                        LOGGER.logInfo("Rappels pour la note avec l'ID" + noteId + " " + note.getContent());
 
                         for (LocalDateTime reminder : reminders) {
                             String formattedReminder = reminder.format(formatter);
-                            System.out.println("- " + formattedReminder);
+                            LOGGER.logInfo("- " + formattedReminder);
                         }
                     } else {
                         // Aucun rappel trouvé pour cette note
-                        System.out.println("Aucun rappel trouvé pour la note avec l'ID" + noteId + " " + note.getContent());
+                        LOGGER.logInfo("Aucun rappel trouvé pour la note avec l'ID" + noteId + " " + note.getContent());
                         
                     }
                 }
             } else {
-                LOGGER.error("Aucune note trouvée avec ce tag.");
+                LOGGER.logError(MessagesContants.ErrorNoNoteFoundWithTag);
             }
             return true;
         }
@@ -433,14 +435,14 @@ public class CommandLineInterface {
                         anyReminderDeleted = true;
                     } else {
                         // Aucun rappel trouvé pour cette note
-                        System.out.println("Aucun rappel trouvé pour la note avec le tag " + tag + " " + note.getContent());
+                        LOGGER.logInfo("Aucun rappel trouvé pour la note avec le tag " + tag + " " + note.getContent());
                     }
                 }
                 if (anyReminderDeleted) {
-                    System.out.println("Rappels supprimés avec succès !");
+                    LOGGER.logInfo(MessagesContants.ReminderDeletedSuccessfully);
                 }
             } else {
-                LOGGER.error("Aucune note trouvée avec ce tag.");
+                LOGGER.logError(MessagesContants.ErrorNoNoteFoundWithTag);
             }
             return true;
         }
@@ -456,7 +458,7 @@ public class CommandLineInterface {
             String filePath = exportTXTMatcher.group(1);
     
             fileHandler.exportToText(filePath);
-            System.out.println("Notes exporter avec succès !");
+            LOGGER.logInfo(MessagesContants.NoteExportedSuccessfully);
             return true;
         }
 
@@ -482,9 +484,9 @@ public class CommandLineInterface {
             // Assuming noteManager.linkNotes returns an int
             int linkId = noteManager.linkNotesWithOR(noteId, tags, linkName);
             if (linkId == -1) {
-                LOGGER.error("Erreur!");
+                LOGGER.logError(MessagesContants.ErrorLinkNotesFailed);
             } else {
-                System.out.println("Notes liées avec succès. Link ID: " + linkId);
+                LOGGER.logInfo(MessagesContants.LinkingNotesSuccessfullyWithId + linkId);
             }
             return true;
         }
@@ -511,9 +513,9 @@ public class CommandLineInterface {
             // Assuming noteManager.linkNotes returns an int
             int linkId = noteManager.linkNotesWithAND(noteId, tags, linkName);
             if (linkId == -1) {
-                LOGGER.error("Erreur!");
+                LOGGER.logError(MessagesContants.ErrorLinkNotesFailed);
             } else {
-                System.out.println("Notes liées avec succès. Link ID: " + linkId);
+                LOGGER.logInfo(MessagesContants.LinkingNotesSuccessfullyWithId + linkId);
             }
             return true;
         }
@@ -540,9 +542,9 @@ public class CommandLineInterface {
             // Assuming noteManager.linkNotes returns an int
             int linkId = noteManager.linkNotesWithANDAtDate(noteId, tags, linkName, date);
             if (linkId == -1) {
-                LOGGER.error("Erreur!");
+                LOGGER.logError(MessagesContants.ErrorLinkNotesFailed);
             } else {
-                System.out.println("Notes liées avec succès.");
+                LOGGER.logInfo(MessagesContants.LinkingNotesSuccessfully);
             }
             return true;
         }
@@ -569,9 +571,9 @@ public class CommandLineInterface {
             // Assuming noteManager.linkNotes returns an int
             int linkId = noteManager.linkNotesWithANDBeforeDate(noteId, tags, linkName, date);
             if (linkId == -1) {
-                LOGGER.error("Erreur!");
+                LOGGER.logError(MessagesContants.ErrorLinkNotesFailed);
             } else {
-                System.out.println("Notes liées avec succès.");
+                LOGGER.logInfo(MessagesContants.LinkingNotesSuccessfully);
             }
             return true;
         }
@@ -598,9 +600,9 @@ public class CommandLineInterface {
             // Assuming noteManager.linkNotes returns an int
             int linkId = noteManager.linkNotesWithANDAfterDate(noteId, tags, linkName, date);
             if (linkId == -1) {
-                LOGGER.error("Erreur!");
+                LOGGER.logError(MessagesContants.ErrorLinkNotesFailed);
             } else {
-                System.out.println("Notes liées avec succès.");
+                LOGGER.logInfo(MessagesContants.LinkingNotesSuccessfully);
             }
             return true;
         }
@@ -616,7 +618,7 @@ public class CommandLineInterface {
             String linkName = showAllLinksByNameMatcher.group(1);
             boolean linkExistenceCheck = noteManager.getAllLinksByName(linkName);
             if (!linkExistenceCheck) {
-                System.out.println("No Links found with Link Name " + linkName);
+                LOGGER.logInfo(MessagesContants.ErrorNoLinkFound + linkName);
 
             return true;
             }
@@ -626,7 +628,7 @@ public class CommandLineInterface {
     }
 
     private void handleInvalidCommand() {
-        System.out.println("Commande invalide. Tapez 'sn --help' pour afficher l'aide.");
+        LOGGER.logInfo("Commande invalide. Tapez 'sn --help' pour afficher l'aide.");
     }
 
     private boolean isImage(String path) {
@@ -634,26 +636,26 @@ public class CommandLineInterface {
     }
 
     public void displayHelp() {
-        System.out.println("Bienvenue dans SuperNotes !");
-        System.out.println("Voici les commandes disponibles :");
-        System.out.println("- Pour ajouter une note texte: sn add \"Contenu de la note\" --tag \"Tag de la note\"");
-        System.out.println("- Pour ajouter une note image : sn add \"Chemin de l'image\" --tag \"Tag de la note\"");
-        System.out.println("- Pour exporter toutes les notes en PDF : sn export --all \"Chemin du fichier PDF\"");
-        System.out.println("- Pour exporter toutes les notes en TXT : sn export --text \"Chemin du fichier TXT\"");
-        System.out.println("- Pour supprimer des notes par ID : sn delete \"ID de la note\"");
-        System.out.println("- Pour supprimer des notes par tag : sn delete --tag \"Tag de la note\"");
-        System.out.println("- Pour exporter des notes par tag en PDF : sn export --tag \"Tag de la note\" \"Chemin du fichier PDF\"");
-        System.out.println("- Pour exporter des notes filtrées par contenu en PDF : sn export --word \"Mot clé\" \"Chemin du fichier PDF\" (le mot clé est facultatif)");
-        System.out.println("- Pour obtenir le contenu d'une page Notion : sn notion get --page \"ID de la page\"");
-        System.out.println("- Pour mettre à jour le contenu d'une page Notion : sn notion update \"Nouveau contenu\" --note \"Ancien contenu\"");
-        System.out.println("- Pour créer une nouvelle page Notion : sn notion create \"Contenu de la nouvelle page\"");
-        System.out.println("- Pour ajouter une note avec rappel : sn add \"Contenu de la note\" --tag \"Tag de la note\" --reminder \"Date et heure du rappel\"");
-        System.out.println("- Pour afficher les rappels pour une note par tag : sn get --reminder --tag \"Tag de la note\"");
-        System.out.println("- Pour supprimer les rappels pour une note par tag : sn delete --reminder --tag \"Tag de la note\"");
-        System.out.println("- Pour lier des notes : sn link --id \"ID_de_la_note\" --tag \"tag1\" [and/or] \"tag2\" [...] --name \"Nom_de_lien\" [--at/--before/--after \"Date\"]\n");
-        System.out.println("- Pour Afficher les Liens des notes : sn show --link \"Nom_de_lien\"\n");
-        System.out.println("- Pour afficher toutes les notes : sn show notes");
-        System.out.println("Pour quitter l'application : exit");
+        LOGGER.logInfo("Bienvenue dans SuperNotes !");
+        LOGGER.logInfo("Voici les commandes disponibles :");
+        LOGGER.logInfo("- Pour ajouter une note texte: sn add \"Contenu de la note\" --tag \"Tag de la note\"");
+        LOGGER.logInfo("- Pour ajouter une note image : sn add \"Chemin de l'image\" --tag \"Tag de la note\"");
+        LOGGER.logInfo("- Pour exporter toutes les notes en PDF : sn export --all \"Chemin du fichier PDF\"");
+        LOGGER.logInfo("- Pour exporter toutes les notes en TXT : sn export --text \"Chemin du fichier TXT\"");
+        LOGGER.logInfo("- Pour supprimer des notes par ID : sn delete \"ID de la note\"");
+        LOGGER.logInfo("- Pour supprimer des notes par tag : sn delete --tag \"Tag de la note\"");
+        LOGGER.logInfo("- Pour exporter des notes par tag en PDF : sn export --tag \"Tag de la note\" \"Chemin du fichier PDF\"");
+        LOGGER.logInfo("- Pour exporter des notes filtrées par contenu en PDF : sn export --word \"Mot clé\" \"Chemin du fichier PDF\" (le mot clé est facultatif)");
+        LOGGER.logInfo("- Pour obtenir le contenu d'une page Notion : sn notion get --page \"ID de la page\"");
+        LOGGER.logInfo("- Pour mettre à jour le contenu d'une page Notion : sn notion update \"Nouveau contenu\" --note \"Ancien contenu\"");
+        LOGGER.logInfo("- Pour créer une nouvelle page Notion : sn notion create \"Contenu de la nouvelle page\"");
+        LOGGER.logInfo("- Pour ajouter une note avec rappel : sn add \"Contenu de la note\" --tag \"Tag de la note\" --reminder \"Date et heure du rappel\"");
+        LOGGER.logInfo("- Pour afficher les rappels pour une note par tag : sn get --reminder --tag \"Tag de la note\"");
+        LOGGER.logInfo("- Pour supprimer les rappels pour une note par tag : sn delete --reminder --tag \"Tag de la note\"");
+        LOGGER.logInfo("- Pour lier des notes : sn link --id \"ID_de_la_note\" --tag \"tag1\" [and/or] \"tag2\" [...] --name \"Nom_de_lien\" [--at/--before/--after \"Date\"]\n");
+        LOGGER.logInfo("- Pour Afficher les Liens des notes : sn show --link \"Nom_de_lien\"\n");
+        LOGGER.logInfo("- Pour afficher toutes les notes : sn show notes");
+        LOGGER.logInfo("Pour quitter l'application : exit");
     }
 
 
