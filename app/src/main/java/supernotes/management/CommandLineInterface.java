@@ -11,6 +11,7 @@ import supernotes.notes.Note;
 import supernotes.notes.NoteFactory;
 import supernotes.notionAPI.NotionApiManager;
 import supernotes.notionAPI.NotionManager;
+import supernotes.translationAPI.*;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -35,16 +36,18 @@ public class CommandLineInterface {
     private final NoteManager noteManager;
     private final NotionApiManager notionApiManager;
     private final NotionManager notionManager;
+    private final TranslationManager translationManager;
     private static final MyLogger LOGGER = MyLogger.getInstance();
 
 
-    public CommandLineInterface(NoteFactory textNoteFactory, NoteFactory imageNoteFactory, FileHandler fileHandler, NotionManager notionManager, NotionApiManager notionApiManager) {
+    public CommandLineInterface(NoteFactory textNoteFactory, NoteFactory imageNoteFactory, FileHandler fileHandler, NotionManager notionManager, NotionApiManager notionApiManager, TranslationManager translationManager) {
         this.textNoteFactory = textNoteFactory;
         this.imageNoteFactory = imageNoteFactory;
         this.fileHandler = fileHandler;
         this.noteManager = new NoteManagerDataBase();
         this.notionApiManager = notionApiManager;
         this.notionManager = notionManager;
+        this.translationManager = translationManager;
     }
 
     public void parseCommand(String command) throws SQLException {        
@@ -109,6 +112,12 @@ public class CommandLineInterface {
             return;
         }
         if (parseShowAllLinksByNameCommand(command)) {
+            return;
+        }
+        if (parseTranslateNoteCommand(command)) {
+            return;
+        }
+        if (parseTranslateAllNotesCommand(command)) {
             return;
         }
 
@@ -303,6 +312,57 @@ public class CommandLineInterface {
 
         return false;
     }
+
+    public boolean parseTranslateNoteCommand(String command) {
+        Pattern translateNotePattern = Pattern.compile("sn translate \"([^\"]*)\" --to \"([^\"]+)\"(?: --tag \"([^\"]*)\")?");
+        Matcher translateNoteMatcher = translateNotePattern.matcher(command);
+
+        if (translateNoteMatcher.matches()) {
+            try {
+                String text = translateNoteMatcher.group(1);
+                String targetLanguage = translateNoteMatcher.group(2);
+                String tag = translateNoteMatcher.group(3);
+
+            String translatedText = translationManager.translateText(text, targetLanguage, tag);
+                if (translatedText != null) {
+
+                    LOGGER.logInfo("Note translated successfully: " + translatedText);
+                }
+                return true;
+            } catch (Exception e) {
+                LOGGER.logError("Error translating note: " + e.getMessage());
+            }
+        }
+
+        return false;
+    }
+
+    public boolean parseTranslateAllNotesCommand(String command) {
+        Pattern translateExistingNotePattern = Pattern.compile("sn translate --note (\\d+) --to \"([^\"]*)\"(?: --tag \"([^\"]*)\")?");
+        Matcher translateExistingNoteMatcher = translateExistingNotePattern.matcher(command);
+
+        if (translateExistingNoteMatcher.matches()) {
+            try {
+                int noteId = Integer.parseInt(translateExistingNoteMatcher.group(1));
+                String targetLanguage = translateExistingNoteMatcher.group(2);
+                String tag = translateExistingNoteMatcher.group(3); 
+
+                String translatedText = translationManager.translateNote(noteId, targetLanguage, tag);
+                
+                if (translatedText != null) {
+                    LOGGER.logInfo("Translated text: " + translatedText);
+                } else {
+                    LOGGER.logInfo("Failed to translate the note.");
+                }
+                return true;
+            } catch (Exception e) {
+                LOGGER.logError("Error translating notes: " + e.getMessage());
+            }
+        }
+
+        return false;
+    }
+
 
 
     private boolean parseHelpCommand(String command) {
@@ -654,6 +714,8 @@ public class CommandLineInterface {
         LOGGER.logInfo("- Pour supprimer les rappels pour une note par tag : sn delete --reminder --tag \"Tag de la note\"");
         LOGGER.logInfo("- Pour lier des notes : sn link --id \"ID_de_la_note\" --tag \"tag1\" [and/or] \"tag2\" [...] --name \"Nom_de_lien\" [--at/--before/--after \"Date\"]\n");
         LOGGER.logInfo("- Pour Afficher les Liens des notes : sn show --link \"Nom_de_lien\"\n");
+        LOGGER.logInfo("- Pour traduire du texte vers une autre langue : sn translate \"text\" --to \"language\" [--tag \"Tag de la note\" (le tag est facultatif)]");
+        LOGGER.logInfo("- Pour traduire une note existante vers une autre langue : sn translate --note <ID de la note> --to \"language\" [--tag \"Tag de la note\" (le tag est facultatif)]");
         LOGGER.logInfo("- Pour afficher toutes les notes : sn show notes");
         LOGGER.logInfo("Pour quitter l'application : exit");
     }

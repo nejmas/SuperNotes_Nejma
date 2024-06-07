@@ -142,4 +142,14 @@ public class NoteManagerDataBase implements NoteManager {
         return dbManager.getAllLinksByName(linkName);
     }
 
+    @Override
+    public Note getNoteById(int noteId) {
+        ArrayList<Note> allNotes = dbManager.getAllNotes();
+        for (Note note : allNotes) {
+            if (note.getId() == noteId) {
+                return note;
+            }
+        }
+        return null;
+    }
 }
